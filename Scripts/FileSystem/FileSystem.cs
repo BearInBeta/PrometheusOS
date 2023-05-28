@@ -1,13 +1,16 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class FileSystem : MonoBehaviour
 {
     private FileDirectory currentDirectory;
     private FileDirectory root;
+    private List<Email> emails;
     // Start is called before the first frame update
     void Awake()
     {
+        emails = new List<Email>();
         root = new FileDirectory("", "");
         currentDirectory = root;
 
@@ -85,7 +88,50 @@ public class FileSystem : MonoBehaviour
         return null;
     }
 
+    public void addEmail(Email email)
+    {
+        emails.Add(email);
+    }
 
+    public string listEmails()
+    {
+        string childrenList = "";
+        int counter = 0;
+            foreach (Email child in emails)
+            {
+            counter++;
+                if (child.read == false)
+                {
+                    childrenList +=  "<color=#00c7eb>" + counter + ". " + child.filename + " - " + child.from + "</color>" ;
+
+                }
+                else
+                {
+                    childrenList += counter + " " + child.filename + " - " + child.from;
+                
+
+                }
+            }
+            return childrenList;
+        
+    }
+
+    public Email gotoemail(string subject)
+    {
+        foreach(Email email in emails)
+        {
+            if (email.filename == subject)
+                return email;
+        }
+        return null;
+    }
+    public Email gotoemail(int order)
+    {
+        if(order > emails.Count)
+        return null;
+
+        return emails[order - 1];
+    }
     public bool changeDirectory(string path)
     {
         FileDirectory newDirectory = findDirectory(path);

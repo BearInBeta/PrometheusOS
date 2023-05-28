@@ -39,6 +39,8 @@ public class Terminal : MonoBehaviour
         commands.Add(new Command("read", () => this.ReadDocument(), "(requires input) reads the document in the specified path"));
         commands.Add(new Command("dekrypt", () => this.Decrypt(), "(requires input) runs the Dekrypt software on the document in the specified path"));
         commands.Add(new Command("unlock", () => this.Unlock(), "(requires input) unlocks the document or folder in the specified path"));
+        commands.Add(new Command("promail", () => this.Emails(), "list all your emails. (optional input) add the email subject or number in the list to open it."));
+
     }
 
     int findCommand(string commandText)
@@ -146,6 +148,63 @@ public class Terminal : MonoBehaviour
         }
 
         EnterResponse(fullHelp);
+    }
+
+    private void Emails()
+    {
+        if (statement.LastIndexOf(' ') == -1)
+        {
+            string children = fileSystem.listEmails();
+            if (children.Trim() != "")
+            {
+                EnterResponse(children);
+            }
+            else
+            {
+                EnterResponse("No emails available.");
+            }
+
+        }
+        else
+        {
+            string emailNum = statement.Substring(statement.IndexOf(' '));
+            int order = 0;
+            bool isNumber = int.TryParse(emailNum, out order); //i now = 108  
+            if (isNumber)
+            {
+                Email email = fileSystem.gotoemail(order);
+                if (email != null)
+                {
+                    OpenEmail(email);
+                }
+                else
+                {
+                    EnterResponse("Email not found.");
+                }
+            }
+            else
+            {
+                Email email = fileSystem.gotoemail(emailNum);
+                if (email != null)
+                {
+                    OpenEmail(email);
+                }
+                else
+                {
+                    EnterResponse("Email not found.");
+                }
+            }
+        }
+
+    }
+    public void OpenEmail(Email email)
+    {
+        string text = email.text;
+
+        readerTitle.text = email.filename;
+        readerText.text = "From: " + email.from + "\nTo: " + email.to + "\n\nSubject: " + email.filename + "\n\n" + text;
+        toolsOpenClose.openTool(3);
+        EnterResponse("Email opened in Doc Viewer");
     }
     private void ChangeDirectory()
     {
