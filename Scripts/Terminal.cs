@@ -37,9 +37,9 @@ public class Terminal : MonoBehaviour
         commands.Add(new Command("list", () => this.List(), "(optional input) lists all system files in current document or path (if given)"));
         commands.Add(new Command("goto", () => this.ChangeDirectory(), "(requires input) changes the directory to the given path"));
         commands.Add(new Command("read", () => this.ReadDocument(), "(requires input) reads the document in the specified path"));
-        commands.Add(new Command("dekrypt", () => this.Decrypt(), "(requires input) runs the Dekrypt software on the document in the specified path"));
+        //commands.Add(new Command("dekrypt", () => this.Decrypt(), "(requires input) runs the Dekrypt software on the document in the specified path"));
         commands.Add(new Command("unlock", () => this.Unlock(), "(requires input) unlocks the document or folder in the specified path"));
-        commands.Add(new Command("promail", () => this.Emails(), "list all your emails. (optional input) add the email subject or number in the list to open it."));
+        commands.Add(new Command("email", () => this.Emails(), "list all your emails. (optional input) add the email subject or number in the list to open it."));
 
     }
 
@@ -200,7 +200,7 @@ public class Terminal : MonoBehaviour
     public void OpenEmail(Email email)
     {
         string text = email.text;
-
+        EnterResponse(text); return;
         readerTitle.text = email.filename;
         readerText.text = "From: " + email.from + "\nTo: " + email.to + "\n\nSubject: " + email.filename + "\n\n" + text;
         toolsOpenClose.openTool(3);
@@ -282,7 +282,7 @@ public class Terminal : MonoBehaviour
     public void OpenTextDoc(TextDocument textFile)
     {
         string text = textFile.text;
-
+        EnterResponse(text); return;
         if (textFile.encrypted)
             text = decryptionTool.scrambleText(textFile);
 
@@ -465,7 +465,7 @@ public class Terminal : MonoBehaviour
         if (!terminalField.text.Equals(""))
             terminalField.text += "\n";
 
-        terminalField.text += "<b><color=#0564fc>user@prOS" + fileSystem.getCurrentDirectoryPath() + ":  </color></b>" + dontParse(text);
+        terminalField.text += "<b><color=#0564fc>user" + fileSystem.getCurrentDirectoryPath() + ":  </color></b>" + dontParse(text);
     }
 
     public void EnterResponse(string text)

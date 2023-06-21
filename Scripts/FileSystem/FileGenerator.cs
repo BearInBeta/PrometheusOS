@@ -11,9 +11,10 @@ public class FileGenerator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        fileSystem.addDirectory("/", "emails", "");
-        fileSystem.addEmail(new Email("Urgent: Dr. Blackwood's Disappearance", "", "Text/Emails/sarah johnson", "sara.johnson@promail.com"));
+        fileSystem.addEmail(new Email("TestEmail", "", "Text/Emails/test", "test@mail.com"));
         fileSystem.addDirectory("/", "documents", "");
+        fileSystem.addDoc("/documents", new TextDocument("test", "pass", "Text/Emails/test", false));
+
         fileSystem.addDirectory(".", "pictures", "");
         fileSystem.addDirectory("", "music", "");    
     }
