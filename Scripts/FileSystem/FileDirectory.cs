@@ -35,7 +35,7 @@ public class FileDirectory : SystemObject
     {
         foreach (SystemObject child in children)
         {
-            if (child.filename.Equals(filename))
+            if (child.filename.ToUpper().Equals(filename.ToUpper()))
             {
                 return child;
             }

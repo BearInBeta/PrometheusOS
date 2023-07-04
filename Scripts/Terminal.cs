@@ -14,6 +14,7 @@ public class Terminal : MonoBehaviour
     public DecryptionTool decryptionTool;
     public ToolsOpenClose toolsOpenClose;
     public Text readerTitle;
+    public FileSystemAccess[] filesystems;
     public TextMeshProUGUI readerText;
     public Image imageViewer;
     public AudioPlayer audioPlayer;
@@ -27,11 +28,13 @@ public class Terminal : MonoBehaviour
     string extraInput;
     
     
+    
     // Start is called before the first frame update
     void Start()
     {
         EnterResponse("Enter 'help' for list of commands");
         commands.Add(new Command("help", () => this.Help(), "(no input) Lists all available commands"));
+        commands.Add(new Command("connect", () => this.Connect(), "(requires input) Connects to the computer with the ACName"));
         commands.Add(new Command("clear", () => this.ClearTerminal(), "(no input) Clears the terminal"));
         commands.Add(new Command("say", () => this.Say(), "(requires input) Repeats input"));
         commands.Add(new Command("list", () => this.List(), "(optional input) lists all system files in current document or path (if given)"));
@@ -138,6 +141,44 @@ public class Terminal : MonoBehaviour
 
     /*-----------------------------------------------------------------------command functions--------------------------------------------------------------------*/
 
+    private void Connect()
+    {
+        if (statement.LastIndexOf(' ') == -1)
+        {
+            ParameterWarning("connect");
+            return;
+        }
+        string acname = statement.Substring(statement.IndexOf(' ')).Trim();
+        foreach(FileSystemAccess fsa in filesystems)
+        {
+            if (fsa.ACName.ToUpper() == acname.ToUpper())
+            {
+                nextFunction = () => ConnectWPass(fsa);
+                waitingForInput = true;
+                EnterResponse("Enter password for " + fsa.ACName + ":");
+                return;
+            }
+        }
+        nextFunction = () => ConnectWPass(null);
+
+    }
+    private void ConnectWPass(FileSystemAccess fsa)
+    {
+        if (fsa == null)
+        {
+            EnterResponse("Incorrect password. Did not connect.");
+            return;
+        }
+        if (fsa.Password.ToUpper() == extraInput.ToUpper())
+        {
+            fileSystem = fsa.filesystem;
+            EnterResponse("Connected to " + fsa.ACName);
+        }
+        else
+        {
+            EnterResponse("Incorrect password. Did not connect.");
+        }
+    }
     private void Help()
     {
         string fullHelp = "";
@@ -200,7 +241,7 @@ public class Terminal : MonoBehaviour
     public void OpenEmail(Email email)
     {
         string text = email.text;
-        EnterResponse(text); return;
+        //EnterResponse(text); return;
         readerTitle.text = email.filename;
         readerText.text = "From: " + email.from + "\nTo: " + email.to + "\n\nSubject: " + email.filename + "\n\n" + text;
         toolsOpenClose.openTool(3);
@@ -282,7 +323,7 @@ public class Terminal : MonoBehaviour
     public void OpenTextDoc(TextDocument textFile)
     {
         string text = textFile.text;
-        EnterResponse(text); return;
+        //EnterResponse(text); return;
         if (textFile.encrypted)
             text = decryptionTool.scrambleText(textFile);
 

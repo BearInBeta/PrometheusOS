@@ -1,0 +1,5 @@
+Type,Name,Path,Password,Resource,Extra1,Extra2,Extra3
+Directory,documents,/,,,,,
+TextDocument,Test,/documents,pass,Text/Emails/test,FALSE,,
+Directory,pictures,.,,,,,
+Directory,recordings,,,,,,
