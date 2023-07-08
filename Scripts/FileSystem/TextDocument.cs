@@ -35,9 +35,16 @@ public class TextDocument : Document
     'Z'
    };
 
-    public TextDocument(string filename, string password, string text, bool encrypted) : base(filename, password)
+    public TextDocument(string filename, string password, string text, bool encrypted, bool sameText = false) : base(filename, password)
     {
-        this.text = Resources.Load<TextAsset>(text).text;
+        if(sameText)
+        {
+            this.text = text;
+        }
+        else
+        {
+            this.text = Resources.Load<TextAsset>(text).text;
+        }
         this.encrypted = encrypted;
         if (encrypted)
         {
