@@ -1,5 +1,4 @@
 Type,Name,Path,Password,Resource,Extra1,Extra2,Extra3
 Directory,documents,/,,,,,
-TextDocument,Test,/documents,pass,Text/Emails/test,FALSE,,
 Directory,pictures,.,,,,,
-Directory,recordings,,,,,,
+Email,Connecting to your work computer,,,Text/Emails/IT,IT@sciencelab.com,dr.blackwood@sciencelab.com,

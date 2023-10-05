@@ -34,7 +34,7 @@ public class Terminal : MonoBehaviour
     {
         EnterResponse("Enter 'help' for list of commands");
         commands.Add(new Command("help", () => this.Help(), "(no input) Lists all available commands"));
-        commands.Add(new Command("connect", () => this.Connect(), "(requires input) Connects to the computer with the ACName"));
+        commands.Add(new Command("connect", () => this.Connect(), "(requires input) Connects to the computer with the PAP number"));
         commands.Add(new Command("clear", () => this.ClearTerminal(), "(no input) Clears the terminal"));
         commands.Add(new Command("say", () => this.Say(), "(requires input) Repeats input"));
         commands.Add(new Command("list", () => this.List(), "(optional input) lists all system files in current document or path (if given)"));
