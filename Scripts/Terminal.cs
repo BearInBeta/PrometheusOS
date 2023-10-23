@@ -26,9 +26,10 @@ public class Terminal : MonoBehaviour
     Action nextFunction;
     bool waitingForInput;
     string extraInput;
-    
-    
-    
+    public AudioSource SFXAS;
+    public AudioClip successClip, failClip, notiClip;
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -145,6 +146,7 @@ public class Terminal : MonoBehaviour
     {
         if (statement.LastIndexOf(' ') == -1)
         {
+            SFXAS.PlayOneShot(failClip);
             ParameterWarning("connect");
             return;
         }
@@ -156,9 +158,13 @@ public class Terminal : MonoBehaviour
                 nextFunction = () => ConnectWPass(fsa);
                 waitingForInput = true;
                 EnterResponse("Enter password for " + fsa.ACName + ":");
+                SFXAS.PlayOneShot(notiClip);
                 return;
             }
         }
+        EnterResponse("Enter password for " + acname + ":");
+        SFXAS.PlayOneShot(notiClip);
+        waitingForInput = true;
         nextFunction = () => ConnectWPass(null);
 
     }
@@ -166,16 +172,19 @@ public class Terminal : MonoBehaviour
     {
         if (fsa == null)
         {
+            SFXAS.PlayOneShot(failClip);
             EnterResponse("Incorrect password. Did not connect.");
             return;
         }
         if (fsa.Password.ToUpper() == extraInput.ToUpper())
         {
+            SFXAS.PlayOneShot(successClip);
             fileSystem = fsa.filesystem;
             EnterResponse("Connected to " + fsa.ACName);
         }
         else
         {
+            SFXAS.PlayOneShot(failClip);
             EnterResponse("Incorrect password. Did not connect.");
         }
     }
@@ -187,7 +196,7 @@ public class Terminal : MonoBehaviour
             string helpText = command.command + " |     " + command.description;
             fullHelp += helpText + "\n";
         }
-
+        SFXAS.PlayOneShot(successClip);
         EnterResponse(fullHelp);
     }
 
@@ -198,10 +207,12 @@ public class Terminal : MonoBehaviour
             string children = fileSystem.listEmails();
             if (children.Trim() != "")
             {
+                SFXAS.PlayOneShot(successClip);
                 EnterResponse(children);
             }
             else
             {
+                SFXAS.PlayOneShot(failClip);
                 EnterResponse("No emails available.");
             }
 
@@ -216,10 +227,12 @@ public class Terminal : MonoBehaviour
                 Email email = fileSystem.gotoemail(order);
                 if (email != null)
                 {
+                    SFXAS.PlayOneShot(successClip);
                     OpenEmail(email);
                 }
                 else
                 {
+                    SFXAS.PlayOneShot(failClip);
                     EnterResponse("Email not found.");
                 }
             }
@@ -228,10 +241,12 @@ public class Terminal : MonoBehaviour
                 Email email = fileSystem.gotoemail(emailNum);
                 if (email != null)
                 {
+                    SFXAS.PlayOneShot(successClip);
                     OpenEmail(email);
                 }
                 else
                 {
+                    SFXAS.PlayOneShot(failClip);
                     EnterResponse("Email not found.");
                 }
             }
@@ -251,22 +266,26 @@ public class Terminal : MonoBehaviour
     {
         if (statement.LastIndexOf(' ') == -1)
         {
+            SFXAS.PlayOneShot(failClip);
             ParameterWarning("goto");
             return;
         }
         if (!checkpass(() => ChangeDirectory()))
         {
+            SFXAS.PlayOneShot(failClip);
             return;
         }
         FileDirectory directory = fileSystem.findDirectory(statement.Substring(statement.IndexOf(' ')).Trim());
         if (directory != null)
         {
 
+            SFXAS.PlayOneShot(successClip);
             fileSystem.changeDirectory(statement.Substring(statement.IndexOf(' ')).Trim());
             EnterResponse("Changed directory to: <color=#00c7eb>" + fileSystem.getCurrentDirectoryPath() + "</color>");
         }
         else
         {
+            SFXAS.PlayOneShot(failClip);
             EnterResponse("<color=#8c002a>Directory not found</color>");
         }
 
@@ -277,11 +296,13 @@ public class Terminal : MonoBehaviour
     {
         if (statement.LastIndexOf(' ') == -1)
         {
+            SFXAS.PlayOneShot(failClip);
             ParameterWarning("read");
             return;
         }
         if (!checkpass(() => ReadDocument()))
         {
+            SFXAS.PlayOneShot(failClip);
             return;
         }
         Document file = fileSystem.findDoc(statement.Substring(statement.IndexOf(' ')).Trim());
@@ -289,21 +310,28 @@ public class Terminal : MonoBehaviour
         {
             if (file.GetType().Equals(typeof(TextDocument)))
             {
+                SFXAS.PlayOneShot(successClip);
                 TextDocument textFile = (TextDocument)file;
                 OpenTextDoc(textFile);
-            }else if (file.GetType().Equals(typeof(ImageDocument)))
+            }
+            else if (file.GetType().Equals(typeof(ImageDocument)))
             {
+                SFXAS.PlayOneShot(successClip);
                 ImageDocument imageFile = (ImageDocument)file;
                 OpenImageDoc(imageFile);
             }
             else if (file.GetType().Equals(typeof(AudioDocument)))
             {
+                SFXAS.PlayOneShot(successClip);
                 AudioDocument audioFile = (AudioDocument)file;
                 OpenAudioDoc(audioFile);
             }
         }
         else
+        {
+            SFXAS.PlayOneShot(failClip);
             EnterResponse("<color=#8c002a>Document not found</color>");
+        }
 
 
 
@@ -374,21 +402,25 @@ public class Terminal : MonoBehaviour
     {
         if (statement.LastIndexOf(' ') == -1)
         {
+            SFXAS.PlayOneShot(failClip);
             ParameterWarning("unlock");
             return;
         }
         if (!checkpass(() => Unlock()))
         {
+            SFXAS.PlayOneShot(failClip);
             return;
         }
         SystemObject systemObject = fileSystem.findSystemObject(statement.Substring(statement.IndexOf(' ')).Trim());
         if (systemObject != null)
         {
 
+            SFXAS.PlayOneShot(successClip);
             EnterResponse(systemObject.filename + " is unlocked.");
         }
         else
         {
+            SFXAS.PlayOneShot(failClip);
             EnterResponse("<color=#8c002a>Document or directory not found</color>");
         }
 
@@ -429,6 +461,7 @@ public class Terminal : MonoBehaviour
     }
     private void NotRecognized()
     {
+        SFXAS.PlayOneShot(failClip);
         string firstWord = FirstWord();
         EnterResponse("Command <color=#8c002a>" + dontParse(firstWord) + "</color> not recognized");
     }
@@ -444,10 +477,12 @@ public class Terminal : MonoBehaviour
     {
         if (statement.LastIndexOf(' ') != -1)
         {
+            SFXAS.PlayOneShot(successClip);
             EnterResponse(statement.Substring(statement.IndexOf(' ')).Trim());
         }
         else
         {
+            SFXAS.PlayOneShot(failClip);
             ParameterWarning("say");
         }
     }
@@ -461,6 +496,7 @@ public class Terminal : MonoBehaviour
 
         }else if (!checkpass(() => List()))
         {
+            SFXAS.PlayOneShot(failClip);
             return;
         }
         else{ 
@@ -470,10 +506,12 @@ public class Terminal : MonoBehaviour
 
         if (children.Trim() != "")
         {
+            SFXAS.PlayOneShot(successClip);
             EnterResponse(children);
         }
         else
         {
+            SFXAS.PlayOneShot(failClip);
             EnterResponse("<This directory is empty>");
         }
     }
@@ -500,6 +538,8 @@ public class Terminal : MonoBehaviour
         if (!waitingForInput)
             terminalField.text = "";
         EnterResponse("Enter 'help' for list of commands");
+        SFXAS.PlayOneShot(successClip);
+
     }
     private void EnterCommand(string text)
     {
