@@ -2,7 +2,7 @@ Detective Parker,
 
 Thank you so much for responding to me. The requested credentials are as follows:
 
-PAP: MA318F8
+PAN: MA318F8
 Password: scienceworks
 
 Sincerely,
@@ -13,7 +13,7 @@ Ms. Johnson,
 
 Thank you for reaching out to me regarding Dr. Blackwood's disappearance. I understand your concerns, and I assure you that I will do everything in my power to find him.
 
-To proceed with the investigation, I will need access to Dr. Blackwood's computer and any related digital assets that might help shed light on his disappearance. Could you please provide me with his IP address? It will allow me to remotely access his computer and search for any relevant information that could aid in the investigation.
+To proceed with the investigation, I will need access to Dr. Blackwood's computer and any related digital assets that might help shed light on his disappearance. Could you please provide me with his PAN address? It will allow me to remotely access his computer and search for any relevant information that could aid in the investigation.
 
 I understand this is a distressing time for you, but your cooperation and any additional information you can provide will be crucial in our efforts to locate Dr. Blackwood. Rest assured, I will work diligently to uncover the truth behind his sudden disappearance.
 

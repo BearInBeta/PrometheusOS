@@ -6,7 +6,5 @@ using UnityEngine;
 [Serializable]
 public class FileSystemAccess
 {
-    public string ACName;
-    public string Password;
     public FileSystem filesystem;
 }

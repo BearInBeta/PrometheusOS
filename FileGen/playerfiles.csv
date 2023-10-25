@@ -1,5 +1,5 @@
 Type,Name,Path,Password,Resource,Extra1,Extra2,Extra3
 Email,Re: Urgent: Dr. Blackwood's Disappearance,,,Text/Emails/sarah_johnson,sarah.johnson@promail.com,detective@promail.com,
-Directory,documents,/,,,,,
+Directory,documents,/,abcd,,,,
 Directory,pictures,.,,,,,
 Directory,music,,,,,,

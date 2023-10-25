@@ -7,6 +7,7 @@ public class FileSystem : MonoBehaviour
     private FileDirectory currentDirectory;
     private FileDirectory root;
     private List<Email> emails;
+    public string personName, ACName, password;
     // Start is called before the first frame update
     void Awake()
     {
@@ -211,7 +212,57 @@ public class FileSystem : MonoBehaviour
 
         return searchDirectory;
     }
+    public string searchfilesystem(string query, bool startFromRoot = true)
+    {
+        string result = "";
+        FileDirectory startingDirectory = startFromRoot ? root : currentDirectory;
 
+        SearchDirectory(startingDirectory, query, ref result);
+        int counter = 0;
+        foreach (Email email in emails)
+        {
+            counter++;
+            if (email.filename.Contains(query, StringComparison.OrdinalIgnoreCase) || email.text.Contains(query, StringComparison.OrdinalIgnoreCase) || email.from.Contains(query, StringComparison.OrdinalIgnoreCase) || email.to.Contains(query, StringComparison.OrdinalIgnoreCase))
+            {
+                result +=  email.GetType().Name + " - " + counter + ". " + email.getPath() + " - " + email.from + "\n";
+            }
+        }
+        return result;
+    }
+
+    private void SearchDirectory(FileDirectory directory, string query, ref string result)
+    {
+        foreach (SystemObject child in directory.getChildren())
+        {
+            
+            if (child is FileDirectory fileDir)
+            {
+                if (fileDir.filename.Contains(query, StringComparison.OrdinalIgnoreCase))
+                {
+                    result += fileDir.GetType().Name + " - " + fileDir.getPath() + "\n";
+                }
+                if (string.IsNullOrEmpty(fileDir.password))
+                {
+                    SearchDirectory(fileDir, query, ref result);
+                }
+            }
+            else if (child is Document document)
+            {
+                if (document.filename.Contains(query, StringComparison.OrdinalIgnoreCase))
+                {
+                    result += document.GetType().Name + " - " + document.getPath() + "\n";
+                }
+                else if (document is TextDocument textDoc && string.IsNullOrEmpty(textDoc.password))
+                {
+                    
+                    if (textDoc.text.Contains(query, StringComparison.OrdinalIgnoreCase))
+                    {
+                        result += textDoc.GetType().Name + " - " + textDoc.getPath() + "\n";
+                    }
+                }
+            }
+        }
+    }
     public string findParentPassword(string path)
     {
 

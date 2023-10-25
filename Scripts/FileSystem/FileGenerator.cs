@@ -7,6 +7,7 @@ public class FileGenerator : MonoBehaviour
     public FileSystem fileSystem;
     [SerializeField]
     private TextAsset csvFile;
+   
     //0-Type	1-Name	2-Path	3-Password	4-Resource	5-Extra1	6-Extra2	7-Extra3
     // Start is called before the first frame update
     void Start()
@@ -27,7 +28,7 @@ public class FileGenerator : MonoBehaviour
             }
             else if (row[0] == "TextDocument")
             {
-                fileSystem.addDoc(row[2], new TextDocument(row[1], row[3], row[4], row[5]=="TRUE"));
+                fileSystem.addDoc(row[2], new TextDocument(row[1], row[3], row[4], row[6] == "TRUE" , row[5]=="TRUE"));
             }
             else if (row[0] == "AudioDocument")
             {

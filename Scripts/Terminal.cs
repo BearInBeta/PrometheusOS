@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
@@ -14,7 +15,7 @@ public class Terminal : MonoBehaviour
     public DecryptionTool decryptionTool;
     public ToolsOpenClose toolsOpenClose;
     public Text readerTitle;
-    public FileSystemAccess[] filesystems;
+    List<FileSystemAccess> filesystems;
     public TextMeshProUGUI readerText;
     public Image imageViewer;
     public AudioPlayer audioPlayer;
@@ -28,11 +29,19 @@ public class Terminal : MonoBehaviour
     string extraInput;
     public AudioSource SFXAS;
     public AudioClip successClip, failClip, notiClip;
-
+    public SocialEngineeringTool SET;
 
     // Start is called before the first frame update
     void Start()
     {
+        GameObject[] FileSystemAccessGOs = GameObject.FindGameObjectsWithTag("Connectable");
+        filesystems = new List<FileSystemAccess>();
+        foreach(GameObject FileSystemAccessGO in FileSystemAccessGOs)
+        {
+            FileSystemAccess FSA = new FileSystemAccess();
+            FSA.filesystem = FileSystemAccessGO.GetComponent<FileSystem>();
+            filesystems.Add(FSA);
+        }
         EnterResponse("Enter 'help' for list of commands");
         commands.Add(new Command("help", () => this.Help(), "(no input) Lists all available commands"));
         commands.Add(new Command("connect", () => this.Connect(), "(requires input) Connects to the computer with the PAP number"));
@@ -43,7 +52,9 @@ public class Terminal : MonoBehaviour
         commands.Add(new Command("read", () => this.ReadDocument(), "(requires input) reads the document in the specified path"));
         //commands.Add(new Command("dekrypt", () => this.Decrypt(), "(requires input) runs the Dekrypt software on the document in the specified path"));
         commands.Add(new Command("unlock", () => this.Unlock(), "(requires input) unlocks the document or folder in the specified path"));
-        commands.Add(new Command("email", () => this.Emails(), "list all your emails. (optional input) add the email subject or number in the list to open it."));
+        commands.Add(new Command("email", () => this.Emails(), "List all your emails. (optional input) add the email subject or number in the list to open it."));
+        commands.Add(new Command("search", () => this.Search(), "(requires input) Searches for the requested query. Query must be enclosed with a quotation mark."));
+
 
     }
 
@@ -153,11 +164,11 @@ public class Terminal : MonoBehaviour
         string acname = statement.Substring(statement.IndexOf(' ')).Trim();
         foreach(FileSystemAccess fsa in filesystems)
         {
-            if (fsa.ACName.ToUpper() == acname.ToUpper())
+            if (fsa.filesystem.ACName.ToUpper() == acname.ToUpper())
             {
                 nextFunction = () => ConnectWPass(fsa);
                 waitingForInput = true;
-                EnterResponse("Enter password for " + fsa.ACName + ":");
+                EnterResponse("Enter password for " + fsa.filesystem.ACName + ":");
                 SFXAS.PlayOneShot(notiClip);
                 return;
             }
@@ -176,17 +187,24 @@ public class Terminal : MonoBehaviour
             EnterResponse("Incorrect password. Did not connect.");
             return;
         }
-        if (fsa.Password.ToUpper() == extraInput.ToUpper())
+        if (fsa.filesystem.password.ToUpper() == extraInput.ToUpper())
         {
             SFXAS.PlayOneShot(successClip);
             fileSystem = fsa.filesystem;
-            EnterResponse("Connected to " + fsa.ACName);
+            EnterResponse("Connected to " + fsa.filesystem.ACName);
+            SET.addFSA(fsa);
         }
         else
         {
             SFXAS.PlayOneShot(failClip);
             EnterResponse("Incorrect password. Did not connect.");
         }
+    }
+    public void connectDirect(FileSystemAccess fsa)
+    {
+        fileSystem = fsa.filesystem;
+        EnterResponse("Connected to " + fsa.filesystem.ACName);
+        GetComponent<ToolsOpenClose>().openTool(1);
     }
     private void Help()
     {
@@ -199,7 +217,53 @@ public class Terminal : MonoBehaviour
         SFXAS.PlayOneShot(successClip);
         EnterResponse(fullHelp);
     }
+    public string ExtractTextBetweenQuotes(string input)
+    {
+        int firstQuoteIndex = input.IndexOf('"');
+        int lastQuoteIndex = input.LastIndexOf('"');
 
+        if (firstQuoteIndex == -1 || firstQuoteIndex == lastQuoteIndex || lastQuoteIndex != input.Length - 1)
+        {
+            // No quotes found, only one quote found, or quotes not balanced.
+            return "";
+        }
+
+        int countQuotes = input.Count(c => c == '"');
+
+        if (countQuotes != 2)
+        {
+            // More or less than two quotes found.
+            return "";
+        }
+
+        string textBetweenQuotes = input.Substring(firstQuoteIndex + 1, lastQuoteIndex - firstQuoteIndex - 1);
+        return textBetweenQuotes;
+    }
+
+    private void Search()
+    {
+        string query = ExtractTextBetweenQuotes(statement);
+        if (query != "")
+        {
+            string result = fileSystem.searchfilesystem(query);
+            if (result == "")
+            {
+                SFXAS.PlayOneShot(failClip);
+                EnterResponse("Your query returned no results");
+            }
+            else
+            {
+                SFXAS.PlayOneShot(successClip);
+                EnterResponse(result);
+            }
+        }
+        else
+        {
+            SFXAS.PlayOneShot(failClip);
+            EnterResponse("Invalid search query");
+
+        }
+    }
     private void Emails()
     {
         if (statement.LastIndexOf(' ') == -1)

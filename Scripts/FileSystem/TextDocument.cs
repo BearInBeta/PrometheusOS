@@ -37,11 +37,11 @@ public class TextDocument : Document
 
     public TextDocument(string filename, string password, string text, bool encrypted, bool sameText = false) : base(filename, password)
     {
-        if(sameText)
+        if(sameText)//the string text is the text
         {
             this.text = text;
         }
-        else
+        else//the string text is the path of the text
         {
             this.text = Resources.Load<TextAsset>(text).text;
         }

@@ -2,3 +2,4 @@ Type,Name,Path,Password,Resource,Extra1,Extra2,Extra3
 Directory,documents,/,,,,,
 Directory,pictures,.,,,,,
 Email,Connecting to your work computer,,,Text/Emails/IT,IT@sciencelab.com,dr.blackwood@sciencelab.com,
+ImageDocument,france_1987,/pictures,,Sprites/france,,,
