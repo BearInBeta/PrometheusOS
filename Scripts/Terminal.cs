@@ -50,10 +50,11 @@ public class Terminal : MonoBehaviour
         commands.Add(new Command("list", () => this.List(), "(optional input) lists all system files in current document or path (if given)"));
         commands.Add(new Command("goto", () => this.ChangeDirectory(), "(requires input) changes the directory to the given path"));
         commands.Add(new Command("read", () => this.ReadDocument(), "(requires input) reads the document in the specified path"));
-        //commands.Add(new Command("dekrypt", () => this.Decrypt(), "(requires input) runs the Dekrypt software on the document in the specified path"));
+        commands.Add(new Command("dekrypt", () => this.Decrypt(), "(requires input) runs the Dekrypt software on the document in the specified path"));
         commands.Add(new Command("unlock", () => this.Unlock(), "(requires input) unlocks the document or folder in the specified path"));
         commands.Add(new Command("email", () => this.Emails(), "List all your emails. (optional input) add the email subject or number in the list to open it."));
         commands.Add(new Command("search", () => this.Search(), "(requires input) Searches for the requested query. Query must be enclosed with a quotation mark."));
+        commands.Add(new Command("meta", () => this.Meta(), "(requires input) reads the metadata of the document in the specified path"));
 
 
     }
@@ -322,7 +323,7 @@ public class Terminal : MonoBehaviour
         string text = email.text;
         //EnterResponse(text); return;
         readerTitle.text = email.filename;
-        readerText.text = "From: " + email.from + "\nTo: " + email.to + "\n\nSubject: " + email.filename + "\n\n" + text;
+        readerText.text = "From: " + email.from + "\nTo: " + email.to + "\nDate: " + email.date + "\n\nSubject: " + email.filename + "\n\n" + text;
         toolsOpenClose.openTool(3);
         EnterResponse("Email opened in Doc Viewer");
     }
@@ -390,6 +391,36 @@ public class Terminal : MonoBehaviour
                 AudioDocument audioFile = (AudioDocument)file;
                 OpenAudioDoc(audioFile);
             }
+        }
+        else
+        {
+            SFXAS.PlayOneShot(failClip);
+            EnterResponse("<color=#8c002a>Document not found</color>");
+        }
+
+
+
+    }
+    private void Meta()
+    {
+        if (statement.LastIndexOf(' ') == -1)
+        {
+            SFXAS.PlayOneShot(failClip);
+            ParameterWarning("meta");
+            return;
+        }
+        if (!checkpass(() => Meta()))
+        {
+            SFXAS.PlayOneShot(failClip);
+            return;
+        }
+        SystemObject file = fileSystem.findSystemObject(statement.Substring(statement.IndexOf(' ')).Trim());
+        if (file != null)
+        {
+            string metadata = "";
+            metadata += "Name: " + file.filename + "\nType: " + file.GetType() + "\nCreation Date: " + file.date;
+            EnterResponse(metadata);
+
         }
         else
         {

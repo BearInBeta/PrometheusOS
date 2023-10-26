@@ -3,13 +3,13 @@
 public class FileDirectory : SystemObject
 {
     private List<SystemObject> children = new List<SystemObject>();
-    public FileDirectory(string filename, string password) : base(null, filename, password)
+    public FileDirectory(string filename, string password, string date) : base(null, filename, password, date)
     {
 
     }
-    public FileDirectory addDirectory(string filename, string password)
+    public FileDirectory addDirectory(string filename, string password, string date)
     {
-        return (FileDirectory)addChild(new FileDirectory(filename, password));
+        return (FileDirectory)addChild(new FileDirectory(filename, password, date));
     }
     public Document addDoc(Document doc)
     {

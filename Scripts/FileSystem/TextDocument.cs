@@ -35,7 +35,7 @@ public class TextDocument : Document
     'Z'
    };
 
-    public TextDocument(string filename, string password, string text, bool encrypted, bool sameText = false) : base(filename, password)
+    public TextDocument(string filename, string password, string text, bool encrypted, string date, bool sameText = false) : base(filename, password, date)
     {
         if(sameText)//the string text is the text
         {

@@ -6,7 +6,7 @@ public class Email : Document
     public bool read = false;
     public string from;
     public string to = "det.<name>@promail.com";
-    public Email(string filename, string password, string text, string from, string to) : base(filename, password)
+    public Email(string filename, string password, string text, string from, string to, string date) : base(filename, password, date)
     {
         this.text = Resources.Load<TextAsset>(text).text;
         this.from = from;

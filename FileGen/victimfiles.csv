@@ -1,5 +1,8 @@
-Type,Name,Path,Password,Resource,Extra1,Extra2,Extra3
-Directory,documents,/,,,,,
-Directory,pictures,.,,,,,
-Email,Connecting to your work computer,,,Text/Emails/IT,IT@sciencelab.com,dr.blackwood@sciencelab.com,
-ImageDocument,france_1987,/pictures,,Sprites/france,,,
+Type,Name,Path,Password,Resource,"Extra1 (sametext, from)","Extra2 (enc,to)",Extra3 (date)
+Directory,documents,/,,,,,05-01-94
+Directory,pictures,.,,,,,05-01-94
+ImageDocument,birthday_1994,/pictures,,Sprites/birthday,,,13-05-94
+Email,Happy Birthday <3,,,Text/Emails/bday,sarah.johnson@promail.com,adrian.blackwood@jlabs.com,13-05-94
+Email,Connecting to your work computer,,,Text/Emails/IT,IT@jlabs.com,adrian.blackwood@jlabs.com,05-03-94
+ImageDocument,france_1992,/pictures,,Sprites/france,,,05-03-94
+TextDocument,hint,documents,,The password is my first name and birth year,TRUE,TRUE,10-01-94

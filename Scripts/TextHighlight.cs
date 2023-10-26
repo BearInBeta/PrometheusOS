@@ -18,7 +18,7 @@ public class TextHighlight : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     private void Start()
     {
-        fulltext = text.text;
+        
     }
     private void Update()
     {
@@ -31,6 +31,7 @@ public class TextHighlight : MonoBehaviour, IBeginDragHandler, IDragHandler, IEn
 
     public void OnBeginDrag(PointerEventData eventData)
     {
+        fulltext = text.text;
         int charIndex = TMP_TextUtilities.GetCursorIndexFromPosition(text, eventData.pressPosition, maincamera);
         if (charIndex != -1)
         {

@@ -1,5 +1,5 @@
-Type,Name,Path,Password,Resource,Extra1,Extra2,Extra3
-Email,Re: Urgent: Dr. Blackwood's Disappearance,,,Text/Emails/sarah_johnson,sarah.johnson@promail.com,detective@promail.com,
-Directory,documents,/,abcd,,,,
-Directory,pictures,.,,,,,
-Directory,music,,,,,,
+Type,Name,Path,Password,Resource,"Extra1 (sametext, from)","Extra2 (enc,to)",Extra3 (date)
+Directory,documents,/,abcd,,,,01-03-94
+Directory,pictures,.,,,,,01-03-94
+Directory,music,,,,,,01-03-94
+Email,Re: Urgent: Dr. Blackwood's Disappearance,,,Text/Emails/sarah_johnson,sarah.johnson@promail.com,detective@promail.com,08-08-94

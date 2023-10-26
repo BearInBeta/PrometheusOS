@@ -5,11 +5,11 @@ using UnityEngine;
 public class ImageDocument : Document
 {
     public Sprite image;
-    public ImageDocument(string filename, string password, Sprite image) : base(filename, password)
+    public ImageDocument(string filename, string password, Sprite image, string date) : base(filename, password, date)
     {
         this.image = image;
     }
-    public ImageDocument(string filename, string password, string path) : base(filename, password)
+    public ImageDocument(string filename, string password, string path, string date) : base(filename, password, date)
     {
         this.image = Resources.Load<Sprite>(path); ;
     }

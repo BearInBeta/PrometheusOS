@@ -12,7 +12,7 @@ public class FileSystem : MonoBehaviour
     void Awake()
     {
         emails = new List<Email>();
-        root = new FileDirectory("", "");
+        root = new FileDirectory("", "", "");
         currentDirectory = root;
 
     }
@@ -66,12 +66,12 @@ public class FileSystem : MonoBehaviour
             return "<color=#8c002a>Directory not found</color>";
         }
     }
-    public FileDirectory addDirectory(string path, string name, string password)
+    public FileDirectory addDirectory(string path, string name, string password, string date)
     {
         FileDirectory directory = findDirectory(path);
         if (directory != null)
         {
-            return directory.addDirectory(name, password);
+            return directory.addDirectory(name, password, date);
         }
 
         return null;
@@ -103,7 +103,7 @@ public class FileSystem : MonoBehaviour
             counter++;
                 if (child.read == false)
                 {
-                    childrenList +=  "<color=#00c7eb>" + counter + ". " + child.filename + " - " + child.from + "</color>" ;
+                    childrenList +=  "<color=#00c7eb>" + counter + ". " + child.filename + " - " + child.from + "</color>\n" ;
 
                 }
                 else
@@ -237,7 +237,7 @@ public class FileSystem : MonoBehaviour
             
             if (child is FileDirectory fileDir)
             {
-                if (fileDir.filename.Contains(query, StringComparison.OrdinalIgnoreCase))
+                if (fileDir.filename.Contains(query, StringComparison.OrdinalIgnoreCase) || fileDir.date.Equals(query, StringComparison.OrdinalIgnoreCase))
                 {
                     result += fileDir.GetType().Name + " - " + fileDir.getPath() + "\n";
                 }
@@ -248,7 +248,7 @@ public class FileSystem : MonoBehaviour
             }
             else if (child is Document document)
             {
-                if (document.filename.Contains(query, StringComparison.OrdinalIgnoreCase))
+                if (document.filename.Contains(query, StringComparison.OrdinalIgnoreCase) || document.date.Equals(query, StringComparison.OrdinalIgnoreCase))
                 {
                     result += document.GetType().Name + " - " + document.getPath() + "\n";
                 }

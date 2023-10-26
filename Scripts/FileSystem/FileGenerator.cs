@@ -21,23 +21,24 @@ public class FileGenerator : MonoBehaviour
         {
             if(row[0] == "Directory")
             {
-                fileSystem.addDirectory(row[2], row[1], row[3]);
+                fileSystem.addDirectory(row[2], row[1], row[3], row[7]);
             }
             else if(row[0] == "Email"){
-                fileSystem.addEmail(new Email(row[1], row[3], row[4], row[5],row[6]));
+                fileSystem.addEmail(new Email(row[1], row[3], row[4], row[5],row[6], row[7]));
+                print(row[7]);
             }
             else if (row[0] == "TextDocument")
             {
-                fileSystem.addDoc(row[2], new TextDocument(row[1], row[3], row[4], row[6] == "TRUE" , row[5]=="TRUE"));
+                fileSystem.addDoc(row[2], new TextDocument(row[1], row[3], row[4], row[6] == "TRUE", row[7], row[5]=="TRUE"));
             }
             else if (row[0] == "AudioDocument")
             {
-                fileSystem.addDoc(row[2], new AudioDocument(row[1], row[3], row[4]));
+                fileSystem.addDoc(row[2], new AudioDocument(row[1], row[3], row[4], row[7]));
 
             }
             else if (row[0] == "ImageDocument")
             {
-                fileSystem.addDoc(row[2], new ImageDocument(row[1], row[3], row[4]));
+                fileSystem.addDoc(row[2], new ImageDocument(row[1], row[3], row[4], row[7]));
             }
             else
             {
