@@ -7,93 +7,88 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using UnityEngine.UIElements;
 
-public class TextHighlight : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+public class TextHighlight : MonoBehaviour
 {
-    public TextMeshProUGUI text;
-    public Camera maincamera;
-    public string fulltext;
-    public string marker = "<mark=#ffff00aa>";
-    string selectedText;
-
+    private TMP_Text textMeshPro;
+    private int highlightStartIndex = -1;
+    private int highlightEndIndex = -1;
 
     private void Start()
     {
-        
+        // Get the TextMeshPro component
+        textMeshPro = GetComponent<TMP_Text>();
+
+        // Enable raycasting for the TextMeshPro component
+        textMeshPro.raycastTarget = true;
     }
+
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.C) && Input.GetKey(KeyCode.LeftControl))
+        // Check for mouse input
+        if (Input.GetMouseButtonDown(0))
         {
-            TextClipboard.CopyToClipboard(selectedText);
-            print("copied");
+            // Cast a ray from the mouse position
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit2D hit = Physics2D.Raycast(ray.origin, ray.direction);
+
+            // Check if the ray hits the TextMeshPro component
+            if (hit.collider != null && hit.collider.gameObject == gameObject)
+            {
+                // Get the index of the clicked character
+                int clickedIndex = TMP_TextUtilities.FindIntersectingCharacter(textMeshPro, Input.mousePosition, Camera.main, true);
+
+                if (clickedIndex != -1)
+                {
+                    // Set the start index of the highlight
+                    highlightStartIndex = clickedIndex;
+                    highlightEndIndex = clickedIndex;
+                }
+            }
         }
+
+        // Check for mouse drag
+        if (Input.GetMouseButton(0) && highlightStartIndex != -1)
+        {
+            // Update the end index of the highlight
+            highlightEndIndex = TMP_TextUtilities.FindIntersectingCharacter(textMeshPro, Input.mousePosition, Camera.main, true);
+        }
+
+        // Check for mouse release
+        if (Input.GetMouseButtonUp(0))
+        {
+            // Copy the highlighted text to the clipboard
+            if (highlightStartIndex != -1 && highlightEndIndex != -1)
+            {
+                string highlightedText = textMeshPro.text.Substring(Mathf.Min(highlightStartIndex, highlightEndIndex),
+                                                                    Mathf.Abs(highlightEndIndex - highlightStartIndex));
+                GUIUtility.systemCopyBuffer = highlightedText;
+
+                // Clear the highlight
+                highlightStartIndex = -1;
+                highlightEndIndex = -1;
+            }
+        }
+
+        // Highlight the text
+        HighlightText();
     }
 
-    public void OnBeginDrag(PointerEventData eventData)
+    private void HighlightText()
     {
-        fulltext = text.text;
-        int charIndex = TMP_TextUtilities.GetCursorIndexFromPosition(text, eventData.pressPosition, maincamera);
-        if (charIndex != -1)
+        if (highlightStartIndex != -1 && highlightEndIndex != -1)
         {
-            int startingChar = charIndex;
-            if(charIndex < fulltext.Length)
-            text.text = fulltext.Substring(0, charIndex) + marker + fulltext[charIndex] + "</mark>" + fulltext.Substring(charIndex + 1);
-        }
-
-    }
-
-    public void OnDrag(PointerEventData eventData)
-    {
-        int charIndex = TMP_TextUtilities.GetCursorIndexFromPosition(text, eventData.position, maincamera);
-        int startingChar = TMP_TextUtilities.GetCursorIndexFromPosition(text, eventData.pressPosition, maincamera);
-
-        if (charIndex >= 0)
-        {
-            int length = charIndex - startingChar;
-            if (length >= 0)
+            // Set the color of the highlighted characters
+            for (int i = 0; i < textMeshPro.textInfo.characterCount; i++)
             {
-                if(startingChar <= fulltext.Length && charIndex < fulltext.Length)
-                text.text = fulltext.Substring(0, startingChar) + marker + fulltext.Substring(startingChar, length + 1) + "</mark>" + fulltext.Substring(charIndex + 1);
-            }
-            else
-            {
-                length = -length;
+                bool isHighlighted = i >= Mathf.Min(highlightStartIndex, highlightEndIndex) &&
+                                      i <= Mathf.Max(highlightStartIndex, highlightEndIndex);
+                Color highlightColor = isHighlighted ? Color.yellow : Color.white;
 
-                 text.text = fulltext.Substring(0, charIndex) + marker + fulltext.Substring(charIndex, length) + "</mark>" + fulltext.Substring(startingChar);
-
-
-
-
+                textMeshPro.textInfo.characterInfo[i].color = highlightColor;
             }
 
-        }
-    }
-
-    public void OnEndDrag(PointerEventData eventData)
-    {
-        int charIndex = TMP_TextUtilities.GetCursorIndexFromPosition(text, eventData.position, maincamera);
-        int startingChar = TMP_TextUtilities.GetCursorIndexFromPosition(text, eventData.pressPosition, maincamera);
-
-        if (charIndex != -1)
-        {
-            int length = charIndex - startingChar;
-            if (length >= 0)
-            {
-                if (startingChar + length < fulltext.Length)
-                    selectedText = fulltext.Substring(startingChar, length + 1);
-            }
-            else
-            {
-                length = -length;
-
-                if (charIndex + length < fulltext.Length)
-                    selectedText = fulltext.Substring(charIndex, length);
-
-
-
-
-            }
-
+            // Update the TextMeshPro mesh
+            textMeshPro.UpdateVertexData(TMP_VertexDataUpdateFlags.All);
         }
     }
 }

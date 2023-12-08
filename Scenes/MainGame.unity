@@ -835,10 +835,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 336c7082ef7972c4988ecb8954d97faf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  text: {fileID: 63336017}
-  maincamera: {fileID: 1626428502}
-  fulltext: 
-  marker: <mark=#ffff84aa>
 --- !u!1 &65881378
 GameObject:
   m_ObjectHideFlags: 0
@@ -9665,10 +9661,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 336c7082ef7972c4988ecb8954d97faf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  text: {fileID: 661209833}
-  maincamera: {fileID: 1626428502}
-  fulltext: 
-  marker: <mark=#ffff84aa>
 --- !u!114 &661209833
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9732,7 +9724,7 @@ MonoBehaviour:
   m_lineSpacingMax: 0
   m_paragraphSpacing: 0
   m_charWidthMaxAdj: 0
-  m_enableWordWrapping: 1
+  m_enableWordWrapping: 0
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
   m_linkedTextComponent: {fileID: 0}
@@ -21747,7 +21739,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1509754566
 RectTransform:
   m_ObjectHideFlags: 0
