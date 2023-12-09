@@ -1,0 +1,5 @@
+Type,Name,Path,Password,Resource,"Extra1 (sametext, from)","Extra2 (enc,to)",Extra3 (date)
+Directory,documents,/,,,,,15/05/1990
+Directory,pictures,.,,,,,15/05/1990
+Directory,calls,,,,,,15/05/1990
+AudioDocument,sinclair,calls,,Audio/placeholder,,,

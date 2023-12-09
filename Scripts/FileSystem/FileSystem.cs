@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class FileSystem : MonoBehaviour
 {
-    private FileDirectory currentDirectory;
+    public FileDirectory currentDirectory;
     private FileDirectory root;
     private List<Email> emails;
     public string personName, ACName, password;

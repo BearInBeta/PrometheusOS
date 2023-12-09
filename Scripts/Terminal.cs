@@ -16,12 +16,13 @@ public class Terminal : MonoBehaviour
     public ToolsOpenClose toolsOpenClose;
     public Text readerTitle;
     List<FileSystemAccess> filesystems;
-    public TextMeshProUGUI readerText;
+    public TMP_InputField readerText;
     public Image imageViewer;
     public AudioPlayer audioPlayer;
     static readonly Regex trimmer = new Regex(@"\s\s+");
     List<Command> commands = new List<Command>();
-    string statement;
+    List<Command> lockedcommands = new List<Command>();
+    public string statement;
     Stack<string> history = new Stack<string>();
     Stack<string> future = new Stack<string>();
     Action nextFunction;
@@ -31,9 +32,11 @@ public class Terminal : MonoBehaviour
     public AudioClip successClip, failClip, notiClip;
     public SocialEngineeringTool SET;
 
+    public bool notutorial = true;
     // Start is called before the first frame update
     void Start()
     {
+        PlayerPrefs.SetInt("VV203R", 0);
         GameObject[] FileSystemAccessGOs = GameObject.FindGameObjectsWithTag("Connectable");
         filesystems = new List<FileSystemAccess>();
         foreach(GameObject FileSystemAccessGO in FileSystemAccessGOs)
@@ -41,24 +44,52 @@ public class Terminal : MonoBehaviour
             FileSystemAccess FSA = new FileSystemAccess();
             FSA.filesystem = FileSystemAccessGO.GetComponent<FileSystem>();
             filesystems.Add(FSA);
+
+            if (PlayerPrefs.HasKey(FSA.filesystem.ACName))
+            {
+                SET.addFSA(FSA);
+            }
         }
         EnterResponse("Enter 'help' for list of commands");
-        commands.Add(new Command("help", () => this.Help(), "(no input) Lists all available commands"));
-        commands.Add(new Command("connect", () => this.Connect(), "(requires input) Connects to the computer with the PAP number"));
-        commands.Add(new Command("clear", () => this.ClearTerminal(), "(no input) Clears the terminal"));
-        commands.Add(new Command("say", () => this.Say(), "(requires input) Repeats input"));
-        commands.Add(new Command("list", () => this.List(), "(optional input) lists all system files in current document or path (if given)"));
-        commands.Add(new Command("goto", () => this.ChangeDirectory(), "(requires input) changes the directory to the given path"));
-        commands.Add(new Command("read", () => this.ReadDocument(), "(requires input) reads the document in the specified path"));
-        commands.Add(new Command("dekrypt", () => this.Decrypt(), "(requires input) runs the Dekrypt software on the document in the specified path"));
-        commands.Add(new Command("unlock", () => this.Unlock(), "(requires input) unlocks the document or folder in the specified path"));
-        commands.Add(new Command("email", () => this.Emails(), "List all your emails. (optional input) add the email subject or number in the list to open it."));
-        commands.Add(new Command("search", () => this.Search(), "(requires input) Searches for the requested query. Query must be enclosed with a quotation mark."));
-        commands.Add(new Command("meta", () => this.Meta(), "(requires input) reads the metadata of the document in the specified path"));
+        lockedcommands.Add(new Command("help", () => this.Help(), "(no input) Lists all available commands"));
+        lockedcommands.Add(new Command("connect", () => this.Connect(), "(requires input) Connects to the computer with the PAP number"));
+        lockedcommands.Add(new Command("clear", () => this.ClearTerminal(), "(no input) Clears the terminal"));
+        lockedcommands.Add(new Command("say", () => this.Say(), "(requires input) Repeats input"));
+        lockedcommands.Add(new Command("list", () => this.List(), "(optional input) lists all system files in current document or path (if given)"));
+        lockedcommands.Add(new Command("goto", () => this.ChangeDirectory(), "(requires input) changes the directory to the given path"));
+        lockedcommands.Add(new Command("read", () => this.ReadDocument(), "(requires input) reads the document in the specified path"));
+        lockedcommands.Add(new Command("dekrypt", () => this.Decrypt(), "(requires input) runs the Dekrypt software on the document in the specified path"));
+        lockedcommands.Add(new Command("unlock", () => this.Unlock(), "(requires input) unlocks the document or folder in the specified path"));
+        lockedcommands.Add(new Command("email", () => this.Emails(), "List all your emails. (optional input) add the email subject or number in the list to open it."));
+        lockedcommands.Add(new Command("search", () => this.Search(), "(requires input) Searches for the requested query. Query must be enclosed with a quotation mark."));
+        lockedcommands.Add(new Command("meta", () => this.Meta(), "(requires input) reads the metadata of the document in the specified path"));
 
+        if(notutorial) unlockAllCommands();
 
     }
+    public void unlockAllCommands()
+    {
+        foreach(Command comm in lockedcommands)
+        {
+            if (!commands.Contains(comm))
+                commands.Add(comm);
+        }
+    }
 
+    public void lockAllCommands()
+    {
+        commands.Clear();
+    }
+    public void unlockCommand(int index, bool visible = false)
+    {
+        if(!commands.Contains(lockedcommands[index]))
+        commands.Add(lockedcommands[index]);
+
+        if (visible)
+        {
+            EnterSuccessResponse("Command '" + lockedcommands[index].command + "' unlocked");
+        }
+    }
     int findCommand(string commandText)
     {
         for(int i = 0; i < commands.Count; i++)
@@ -158,7 +189,6 @@ public class Terminal : MonoBehaviour
     {
         if (statement.LastIndexOf(' ') == -1)
         {
-            SFXAS.PlayOneShot(failClip);
             ParameterWarning("connect");
             return;
         }
@@ -184,21 +214,18 @@ public class Terminal : MonoBehaviour
     {
         if (fsa == null)
         {
-            SFXAS.PlayOneShot(failClip);
-            EnterResponse("Incorrect password. Did not connect.");
+            EnterErrorResponse("Incorrect password. Did not connect.");
             return;
         }
         if (fsa.filesystem.password.ToUpper() == extraInput.ToUpper())
         {
-            SFXAS.PlayOneShot(successClip);
             fileSystem = fsa.filesystem;
-            EnterResponse("Connected to " + fsa.filesystem.ACName);
+            EnterSuccessResponse("Connected to " + fsa.filesystem.ACName);
             SET.addFSA(fsa);
         }
         else
         {
-            SFXAS.PlayOneShot(failClip);
-            EnterResponse("Incorrect password. Did not connect.");
+            EnterErrorResponse("Incorrect password. Did not connect.");
         }
     }
     public void connectDirect(FileSystemAccess fsa)
@@ -215,8 +242,7 @@ public class Terminal : MonoBehaviour
             string helpText = command.command + " |     " + command.description;
             fullHelp += helpText + "\n";
         }
-        SFXAS.PlayOneShot(successClip);
-        EnterResponse(fullHelp);
+        EnterNormalResponse(fullHelp);
     }
     public string ExtractTextBetweenQuotes(string input)
     {
@@ -249,19 +275,16 @@ public class Terminal : MonoBehaviour
             string result = fileSystem.searchfilesystem(query);
             if (result == "")
             {
-                SFXAS.PlayOneShot(failClip);
-                EnterResponse("Your query returned no results");
+                EnterErrorResponse("Your query returned no results");
             }
             else
             {
-                SFXAS.PlayOneShot(successClip);
-                EnterResponse(result);
+                EnterNormalResponse(result);
             }
         }
         else
         {
-            SFXAS.PlayOneShot(failClip);
-            EnterResponse("Invalid search query");
+            EnterErrorResponse("Invalid search query");
 
         }
     }
@@ -272,13 +295,11 @@ public class Terminal : MonoBehaviour
             string children = fileSystem.listEmails();
             if (children.Trim() != "")
             {
-                SFXAS.PlayOneShot(successClip);
-                EnterResponse(children);
+                EnterNormalResponse(children);
             }
             else
             {
-                SFXAS.PlayOneShot(failClip);
-                EnterResponse("No emails available.");
+                EnterErrorResponse("No emails available.");
             }
 
         }
@@ -292,13 +313,11 @@ public class Terminal : MonoBehaviour
                 Email email = fileSystem.gotoemail(order);
                 if (email != null)
                 {
-                    SFXAS.PlayOneShot(successClip);
                     OpenEmail(email);
                 }
                 else
                 {
-                    SFXAS.PlayOneShot(failClip);
-                    EnterResponse("Email not found.");
+                    EnterErrorResponse("Email not found.");
                 }
             }
             else
@@ -306,13 +325,11 @@ public class Terminal : MonoBehaviour
                 Email email = fileSystem.gotoemail(emailNum);
                 if (email != null)
                 {
-                    SFXAS.PlayOneShot(successClip);
                     OpenEmail(email);
                 }
                 else
                 {
-                    SFXAS.PlayOneShot(failClip);
-                    EnterResponse("Email not found.");
+                    EnterErrorResponse("Email not found.");
                 }
             }
         }
@@ -325,33 +342,29 @@ public class Terminal : MonoBehaviour
         readerTitle.text = email.filename;
         readerText.text = "From: " + email.from + "\nTo: " + email.to + "\nDate: " + email.date + "\n\nSubject: " + email.filename + "\n\n" + text;
         toolsOpenClose.openTool(3);
-        EnterResponse("Email opened in Doc Viewer");
+        EnterSuccessResponse("Email opened in Doc Viewer");
     }
     private void ChangeDirectory()
     {
         if (statement.LastIndexOf(' ') == -1)
         {
-            SFXAS.PlayOneShot(failClip);
             ParameterWarning("goto");
             return;
         }
         if (!checkpass(() => ChangeDirectory()))
         {
-            SFXAS.PlayOneShot(failClip);
             return;
         }
         FileDirectory directory = fileSystem.findDirectory(statement.Substring(statement.IndexOf(' ')).Trim());
         if (directory != null)
         {
 
-            SFXAS.PlayOneShot(successClip);
             fileSystem.changeDirectory(statement.Substring(statement.IndexOf(' ')).Trim());
-            EnterResponse("Changed directory to: <color=#00c7eb>" + fileSystem.getCurrentDirectoryPath() + "</color>");
+            EnterNormalResponse("Changed directory to: <color=#00c7eb>" + fileSystem.getCurrentDirectoryPath() + "</color>");
         }
         else
         {
-            SFXAS.PlayOneShot(failClip);
-            EnterResponse("<color=#8c002a>Directory not found</color>");
+            EnterErrorResponse("<color=#8c002a>Directory not found</color>");
         }
 
 
@@ -361,13 +374,11 @@ public class Terminal : MonoBehaviour
     {
         if (statement.LastIndexOf(' ') == -1)
         {
-            SFXAS.PlayOneShot(failClip);
             ParameterWarning("read");
             return;
         }
         if (!checkpass(() => ReadDocument()))
         {
-            SFXAS.PlayOneShot(failClip);
             return;
         }
         Document file = fileSystem.findDoc(statement.Substring(statement.IndexOf(' ')).Trim());
@@ -375,27 +386,23 @@ public class Terminal : MonoBehaviour
         {
             if (file.GetType().Equals(typeof(TextDocument)))
             {
-                SFXAS.PlayOneShot(successClip);
                 TextDocument textFile = (TextDocument)file;
                 OpenTextDoc(textFile);
             }
             else if (file.GetType().Equals(typeof(ImageDocument)))
             {
-                SFXAS.PlayOneShot(successClip);
                 ImageDocument imageFile = (ImageDocument)file;
                 OpenImageDoc(imageFile);
             }
             else if (file.GetType().Equals(typeof(AudioDocument)))
             {
-                SFXAS.PlayOneShot(successClip);
                 AudioDocument audioFile = (AudioDocument)file;
                 OpenAudioDoc(audioFile);
             }
         }
         else
         {
-            SFXAS.PlayOneShot(failClip);
-            EnterResponse("<color=#8c002a>Document not found</color>");
+            EnterErrorResponse("<color=#8c002a>Document not found</color>");
         }
 
 
@@ -405,13 +412,11 @@ public class Terminal : MonoBehaviour
     {
         if (statement.LastIndexOf(' ') == -1)
         {
-            SFXAS.PlayOneShot(failClip);
             ParameterWarning("meta");
             return;
         }
         if (!checkpass(() => Meta()))
         {
-            SFXAS.PlayOneShot(failClip);
             return;
         }
         SystemObject file = fileSystem.findSystemObject(statement.Substring(statement.IndexOf(' ')).Trim());
@@ -424,8 +429,7 @@ public class Terminal : MonoBehaviour
         }
         else
         {
-            SFXAS.PlayOneShot(failClip);
-            EnterResponse("<color=#8c002a>Document not found</color>");
+            EnterErrorResponse("<color=#8c002a>Document not found</color>");
         }
 
 
@@ -435,13 +439,13 @@ public class Terminal : MonoBehaviour
     {
         audioPlayer.addClip(audioFile.clip, audioFile.getPath());
         toolsOpenClose.openTool(5);
-        EnterResponse("Document opened in Audio Player");
+        EnterSuccessResponse("Document opened in Audio Player");
     }
     public void OpenImageDoc(ImageDocument imageFile)
     {
         imageViewer.sprite = imageFile.image;
         toolsOpenClose.openTool(6);
-        EnterResponse("Document opened in Picture Viewer");
+        EnterSuccessResponse("Document opened in Picture Viewer");
     }
     public void OpenTextDoc(TextDocument textFile)
     {
@@ -453,7 +457,7 @@ public class Terminal : MonoBehaviour
         readerTitle.text = textFile.filename;
         readerText.text = text;
         toolsOpenClose.openTool(3);
-        EnterResponse("Document opened in Doc Viewer");
+        EnterSuccessResponse("Document opened in Doc Viewer");
     }
 
     private void Decrypt()
@@ -497,26 +501,22 @@ public class Terminal : MonoBehaviour
     {
         if (statement.LastIndexOf(' ') == -1)
         {
-            SFXAS.PlayOneShot(failClip);
             ParameterWarning("unlock");
             return;
         }
         if (!checkpass(() => Unlock()))
         {
-            SFXAS.PlayOneShot(failClip);
             return;
         }
         SystemObject systemObject = fileSystem.findSystemObject(statement.Substring(statement.IndexOf(' ')).Trim());
         if (systemObject != null)
         {
 
-            SFXAS.PlayOneShot(successClip);
-            EnterResponse(systemObject.filename + " is unlocked.");
+            EnterSuccessResponse(systemObject.filename + " is unlocked.");
         }
         else
         {
-            SFXAS.PlayOneShot(failClip);
-            EnterResponse("<color=#8c002a>Document or directory not found</color>");
+            EnterErrorResponse("<color=#8c002a>Document or directory not found</color>");
         }
 
 
@@ -528,26 +528,26 @@ public class Terminal : MonoBehaviour
         string parentPassword = fileSystem.findParentPassword(filename);
         if (parentPassword != null)
         {
-            EnterResponse("Directory " + parentPassword + " is password protected. Please unlock it first.");
+            EnterErrorResponse("Directory " + parentPassword + " is password protected. Please unlock it first.");
             return false;
         }
         SystemObject systemObject = fileSystem.findSystemObject(filename);
         if (systemObject == null)
         {
-            EnterResponse("<color=#8c002a>Document or directory not found</color>");
+            EnterErrorResponse("<color=#8c002a>Document or directory not found</color>");
             return false;
         }
         if (systemObject.password != "" && !waitingForInput)
         {
             nextFunction = action;
             waitingForInput = true;
-            EnterResponse("Enter password for " + systemObject.filename + ":");
+            EnterNormalResponse("Enter password for " + systemObject.filename + ":");
             return false;
         }
 
         if (systemObject.password != extraInput && waitingForInput)
         {
-            EnterResponse("Password was incorrect");
+            EnterErrorResponse("Password was incorrect");
             return false;
         }
 
@@ -556,9 +556,8 @@ public class Terminal : MonoBehaviour
     }
     private void NotRecognized()
     {
-        SFXAS.PlayOneShot(failClip);
         string firstWord = FirstWord();
-        EnterResponse("Command <color=#8c002a>" + dontParse(firstWord) + "</color> not recognized");
+        EnterErrorResponse("Command <color=#8c002a>" + dontParse(firstWord) + "</color> not recognized");
     }
 
     private string FirstWord()
@@ -572,12 +571,10 @@ public class Terminal : MonoBehaviour
     {
         if (statement.LastIndexOf(' ') != -1)
         {
-            SFXAS.PlayOneShot(successClip);
-            EnterResponse(statement.Substring(statement.IndexOf(' ')).Trim());
+            EnterNormalResponse(statement.Substring(statement.IndexOf(' ')).Trim());
         }
         else
         {
-            SFXAS.PlayOneShot(failClip);
             ParameterWarning("say");
         }
     }
@@ -591,7 +588,6 @@ public class Terminal : MonoBehaviour
 
         }else if (!checkpass(() => List()))
         {
-            SFXAS.PlayOneShot(failClip);
             return;
         }
         else{ 
@@ -601,18 +597,16 @@ public class Terminal : MonoBehaviour
 
         if (children.Trim() != "")
         {
-            SFXAS.PlayOneShot(successClip);
-            EnterResponse(children);
+            EnterNormalResponse(children);
         }
         else
         {
-            SFXAS.PlayOneShot(failClip);
-            EnterResponse("<This directory is empty>");
+            EnterErrorResponse("<This directory is empty>");
         }
     }
     private void ParameterWarning(string command)
     {
-        EnterResponse("Command <color=#8c002a>" + dontParse(command) + "</color> needs a parameter");
+        EnterErrorResponse("Command <color=#8c002a>" + dontParse(command) + "</color> needs a parameter");
 
     }
     private string dontParse(string s)
@@ -632,8 +626,7 @@ public class Terminal : MonoBehaviour
     {
         if (!waitingForInput)
             terminalField.text = "";
-        EnterResponse("Enter 'help' for list of commands");
-        SFXAS.PlayOneShot(successClip);
+        EnterNormalResponse("Enter 'help' for list of commands");
 
     }
     private void EnterCommand(string text)
@@ -643,19 +636,73 @@ public class Terminal : MonoBehaviour
 
         terminalField.text += "<b><color=#0564fc>user" + fileSystem.getCurrentDirectoryPath() + ":  </color></b>" + dontParse(text);
     }
-
+    public void EnterErrorResponse(string text)
+    {
+        SFXAS.PlayOneShot(failClip);
+        EnterResponse("<b><color=#9c0000>" + text + "</color></b>");
+    }
+    public void EnterSuccessResponse(string text)
+    {
+        SFXAS.PlayOneShot(successClip);
+        EnterResponse("<b><color=#01800e>" + text + "</color></b>");
+    }
+    public void EnterNormalResponse(string text)
+    {
+        SFXAS.PlayOneShot(successClip);
+        EnterResponse(text);
+    }
+    public void removeText(string text)
+    {
+        terminalField.text = terminalField.text.Replace(text, "");
+    }
     public void EnterResponse(string text)
     {
         if (!terminalField.text.Equals(""))
             terminalField.text += "\n";
 
         terminalField.text += text;
+        StartCoroutine(scrollDown());
+
     }
 
     IEnumerator scrollDown()
     {
         yield return null;
         scrollRect.verticalNormalizedPosition = 0;
+
+    }
+    private void FinalChoice(string choice)
+    {
+   
+        if(choice.Equals("no"))
+            EnterResponse("are you sure you want to delete all the data related to the case?");
+        else
+            EnterResponse("are you sure you want to send the data to " + choice);
+        SFXAS.PlayOneShot(notiClip);
+        waitingForInput = true;
+        nextFunction = () => Confirm(choice);
+
+    }
+    private void Confirm(string choice)
+    {
+        if (extraInput.ToUpper().Equals("Y"))
+        {
+            if (choice.Equals("no"))
+                EnterResponse("Data deleted");
+            else
+                EnterErrorResponse("Data sent to " + choice);
+            return;
+        }else
+        {
+            EnterErrorResponse("Choice unconfirmed, try again");
+        }
+    }
+    public void endingCommands()
+    {
+        commands.Add(new Command("police", () => this.FinalChoice("the police"), "Send all the findings to the police"));
+        commands.Add(new Command("national", () => this.FinalChoice("the national"), "Send all the findings to journalist frank cunningham in the national"));
+        commands.Add(new Command("acorp", () => this.FinalChoice("A-Corp"), "Send all the findings to A-Corp"));
+        commands.Add(new Command("leave", () => this.FinalChoice("no"), "Delete all your findings and leave the research be"));
 
     }
 }
