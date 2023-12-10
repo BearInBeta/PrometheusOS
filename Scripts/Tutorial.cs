@@ -8,14 +8,14 @@ public class Tutorial : MonoBehaviour
 {
     public Terminal terminal;
     public Image terminalButtonImage, profileimage;
-    public GameObject TerminalPanel;
+    public GameObject TerminalPanel, MainCamera;
     public AudioSource vfxsource;
-    public AudioClip notificationClip, successClip;
+    public AudioClip notificationClip, successClip, failClip;
     public InputField commandField;
     public TMPro.TMP_InputField docviewer;
     public Image imageviewer;
     public Button Profile, ImageViewer, DocViewer, AudioPlayer, Settings, Decrypt;
-
+    public ImageDocument dekryptFile;
     // Start is called before the first frame update
     void Start()
     {
@@ -32,6 +32,7 @@ public class Tutorial : MonoBehaviour
             Decrypt.gameObject.SetActive(true);
             Decrypt.interactable = true;
         }
+        //StartCoroutine(finalRing());
     }
 
     static bool ContainsBadWord(string input)
@@ -305,21 +306,75 @@ public IEnumerator tutorialSay(string say)
         float time = ((float)say.Length) / 10f;
         yield return new WaitForSeconds(time);
         terminal.removeText("\nvictor is typing...");
-        tutorialCharacter(say);
+        victorCharacter(say);
     }
     public void victorCharacter(string say)
     {
         vfxsource.PlayOneShot(successClip);
-        terminal.EnterResponse("<b><color=#ad1015>victor:  </color></b>" + say);
+        terminal.EnterResponse("<b><color=#bf0202>victor:  </color></b>" + say);
     }
     // Update is called once per frame
     void Update()
     {
         
     }
+    public IEnumerator dekryptTutorial()
+    {
+        
+            commandField.interactable = false;
+            Profile.interactable = false;
+            ImageViewer.interactable = false;
+            DocViewer.interactable = false;
+            AudioPlayer.interactable = false;
+            Settings.interactable = false;
+            Decrypt.interactable = false;
 
+            while (!TerminalPanel.activeInHierarchy)
+            {
+                vfxsource.PlayOneShot(notificationClip);
+                terminalButtonImage.color = Color.magenta;
+                yield return new WaitForSeconds(0.5f);
+                terminalButtonImage.color = Color.white;
+                yield return new WaitForSeconds(1f);
+            }
+            terminal.EnterResponse("user alex has logged on");
+            yield return StartCoroutine(tutorialSay("hello detective"));
+            yield return StartCoroutine(tutorialSay("it seems you have run into an encrypted file"));
+            yield return StartCoroutine(tutorialSay("luckily I have just the program for that"));
+            yield return StartCoroutine(tutorialSay("let me enable it"));
+            Decrypt.gameObject.SetActive(true);
+            terminal.unlockCommand(7, true);
+            yield return StartCoroutine(tutorialSay("this is the dekrypt command"));
+            yield return StartCoroutine(tutorialSay("you can use it to decrypt files"));
+            yield return StartCoroutine(tutorialSay("just type 'dekrypt <file path>' in the terminal, the same way you use 'read'"));
+            yield return StartCoroutine(tutorialSay("then you'll get the encrypted file in the program"));
+            yield return StartCoroutine(tutorialSay("use the mouse wheel to cycle through the letter"));
+            yield return StartCoroutine(tutorialSay("small hint: start with words that you already know"));
+            yield return StartCoroutine(tutorialSay("I think the second word in that file is password ;)"));
+            yield return StartCoroutine(tutorialSay("also try to find common words like 'the' or 'is'"));
+            yield return StartCoroutine(tutorialSay("once you change a letter all the corresponding letters will change as well"));
+            yield return StartCoroutine(tutorialSay("I have also added a detailed explanation of how it works on your computer"));
+            yield return StartCoroutine(tutorialSay("I'll open it right now, it's also saved on your system"));
+            yield return StartCoroutine(tutorialSay("good luck :)"));
+            terminal.EnterResponse("user alex has logged off");
+            yield return new WaitForSeconds(1f);
+            terminal.OpenImageDoc(new ImageDocument("dekrypt_tutorial", "", "Sprites/dekrypt_tutorial", ""));
+        
+
+
+    }
     IEnumerator finalRing()
     {
+        MainCamera.GetComponent<CameraFilterPack_FX_Glitch3>().enabled = true;
+        for(int i = 0; i < 10; i++)
+        {
+            yield return new WaitForSeconds(Random.Range(0f,1f));
+            vfxsource.PlayOneShot(failClip);
+        }
+        
+        MainCamera.GetComponent<CameraFilterPack_FX_Glitch3>().enabled = false;
+
+
         terminal.lockAllCommands();
         commandField.interactable = false;
         Profile.interactable = false;
@@ -376,6 +431,21 @@ public IEnumerator tutorialSay(string say)
         yield return StartCoroutine(victorSay("and Viridian research will continue"));
         yield return StartCoroutine(victorSay("it's your choice, detective"));
         yield return StartCoroutine(victorSay("i'll set up the commands to send the data"));
+        terminal.endingCommands();
+        commandField.interactable = true;
+
+        while (!terminal.finalWait)
+        {
+            yield return new WaitForEndOfFrame();
+        }
+
+        yield return StartCoroutine(victorSay("i guess you made your choice"));
+        yield return StartCoroutine(victorSay("can you live with it?"));
+        yield return StartCoroutine(victorSay("i won't do anything to stop whatever comes"));
+        yield return StartCoroutine(victorSay("i just hope it was the right choice"));
+        yield return StartCoroutine(victorSay("goodbye, detective"));
+        terminal.EnterResponse("user victor has logged off");
+
 
     }
 

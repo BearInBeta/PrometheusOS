@@ -31,12 +31,15 @@ public class Terminal : MonoBehaviour
     public AudioSource SFXAS;
     public AudioClip successClip, failClip, notiClip;
     public SocialEngineeringTool SET;
-
+    public bool finalWait = false;
     public bool notutorial = true;
+    public Tutorial tutorial;
     // Start is called before the first frame update
     void Start()
     {
         PlayerPrefs.SetInt("VV203R", 0);
+        PlayerPrefs.SetInt("MA318F8", 0);
+
         GameObject[] FileSystemAccessGOs = GameObject.FindGameObjectsWithTag("Connectable");
         filesystems = new List<FileSystemAccess>();
         foreach(GameObject FileSystemAccessGO in FileSystemAccessGOs)
@@ -449,6 +452,7 @@ public class Terminal : MonoBehaviour
     }
     public void OpenTextDoc(TextDocument textFile)
     {
+      
         string text = textFile.text;
         //EnterResponse(text); return;
         if (textFile.encrypted)
@@ -457,6 +461,11 @@ public class Terminal : MonoBehaviour
         readerTitle.text = textFile.filename;
         readerText.text = text;
         toolsOpenClose.openTool(3);
+        if (textFile.encrypted == true && !PlayerPrefs.HasKey("dekryptTutorialDone"))
+        {
+            PlayerPrefs.SetInt("dekryptTutorialDone", 0);
+            StartCoroutine(tutorial.dekryptTutorial());
+        }
         EnterSuccessResponse("Document opened in Doc Viewer");
     }
 
@@ -675,9 +684,9 @@ public class Terminal : MonoBehaviour
     {
    
         if(choice.Equals("no"))
-            EnterResponse("are you sure you want to delete all the data related to the case?");
+            EnterResponse("are you sure you want to delete all the data related to the case? (Y/N)");
         else
-            EnterResponse("are you sure you want to send the data to " + choice);
+            EnterResponse("are you sure you want to send the data to " + choice + "? (Y/N)");
         SFXAS.PlayOneShot(notiClip);
         waitingForInput = true;
         nextFunction = () => Confirm(choice);
@@ -690,7 +699,9 @@ public class Terminal : MonoBehaviour
             if (choice.Equals("no"))
                 EnterResponse("Data deleted");
             else
-                EnterErrorResponse("Data sent to " + choice);
+                EnterSuccessResponse("Data sent to " + choice);
+
+            finalWait = true;
             return;
         }else
         {
@@ -702,7 +713,11 @@ public class Terminal : MonoBehaviour
         commands.Add(new Command("police", () => this.FinalChoice("the police"), "Send all the findings to the police"));
         commands.Add(new Command("national", () => this.FinalChoice("the national"), "Send all the findings to journalist frank cunningham in the national"));
         commands.Add(new Command("acorp", () => this.FinalChoice("A-Corp"), "Send all the findings to A-Corp"));
-        commands.Add(new Command("leave", () => this.FinalChoice("no"), "Delete all your findings and leave the research be"));
+        commands.Add(new Command("delete", () => this.FinalChoice("no"), "Delete all your findings and leave the research be"));
+        EnterSuccessResponse("command 'police' added");
+        EnterSuccessResponse("command 'national' added");
+        EnterSuccessResponse("command 'acorp' added");
+        EnterSuccessResponse("command 'delete' added");
 
     }
 }

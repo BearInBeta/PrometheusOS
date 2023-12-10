@@ -23,7 +23,15 @@ public class SceneChanger : MonoBehaviour
         // Fade to next scene on key press then make the mouse cursor visible
         if (sceneName == "Intro" && Input.anyKeyDown) FadeToScene("MainMenu");        // #2 Login & signup scene 
     }
+    public void ResetGame()
+    {
+        // Remove all PlayerPrefs
+        PlayerPrefs.DeleteAll();
 
+        // Reload the current scene
+        Scene currentScene = SceneManager.GetActiveScene();
+        SceneManager.LoadScene(currentScene.buildIndex);
+    }
     // Fade to scene function
     public void FadeToScene(string sceneName)
     {
