@@ -1,11 +1,12 @@
 Type,Name,Path,Password,Resource,"Extra1 (sametext, from)","Extra2 (enc,to)",Extra3 (date)
-Directory,research_notes,,,,,,15-12-90
-Directory,viridian,/research_notes,sinclair,,,,06-01-94
-Directory,xf303,/research_notes,kdflksdf,,,,19-04-93
-Directory,xf301,/research_notes,ldksf;;ldfs,,,,13-11-92
-Directory,quada,/research_notes,afjhahkdfa,,,,03-01-91
-Directory,rat_flu,/research_notes,adifjds;nfl,,,,15-12-90
-Directory,documents,/,,,,,15-05-90
-Directory,pictures,.,,,,,15-05-90
-TextDocument,sinclair_resignation,documents,,Text/resign,,,10-01-94
-AudioDocument,viridian_notes,/research_notes/viridian,,Audio/recordings/exp/rec1,FALSE,,06-01-94
+Directory,research_notes,,,,,,15/12/1990
+Directory,viridian,/research_notes,sinclair,,,,06/01/1994
+Directory,xf303,/research_notes,kdflksdf,,,,19/04/1993
+Directory,xf301,/research_notes,ldksf;;ldfs,,,,13/11/1992
+Directory,quada,/research_notes,afjhahkdfa,,,,03/01/1991
+Directory,rat_flu,/research_notes,adifjds;nfl,,,,15/12/1990
+Directory,documents,/,,,,,15/05/1990
+Directory,pictures,.,,,,,15/05/1990
+TextDocument,sinclair_resignation,documents,,Text/resign,,,10/01/1994
+AudioDocument,viridian_notes,/research_notes/viridian,,Audio/recordings/exp/rec1,FALSE,,06/01/1994
+Email,Paris Documents,,,Text/Emails/paris,sarah.b@promail.com,adrian.b@promail.com,02/03/1994

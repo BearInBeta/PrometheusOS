@@ -1,8 +1,11 @@
 Type,Name,Path,Password,Resource,"Extra1 (sametext, from)","Extra2 (enc,to)",Extra3 (date)
-Directory,documents,/,,,,,05/01/1994
-Directory,pictures,.,,,,,05/01/1994
+Directory,documents,/,,,,,19/11/1993
+Directory,pictures,.,,,,,19/11/1993
 ImageDocument,birthday_1994,/pictures,,Sprites/birthday,,,13/05/1994
-Email,Happy Birthday <3,,,Text/Emails/bday,sarah.johnson@promail.com,adrian.blackwood@jlabs.com,13/05/1994
+Email,Happy Birthday <3,,,Text/Emails/bday,sarah.b@promail.com,adrian.b@promail.com,13/05/1994
 Email,Connecting to your work computer,,,Text/Emails/IT,IT@jlabs.com,adrian.blackwood@jlabs.com,05/03/1994
-ImageDocument,france_1992,/pictures,,Sprites/france,,,05/03/1994
-TextDocument,hint,documents,,The password is my first name and birth year,TRUE,TRUE,10/01/1994
+ImageDocument,france_1992,/pictures,,Sprites/france,,,30/02/1994
+TextDocument,hint,documents,,The password is my first name and birth year,TRUE,TRUE,05/03/1994
+Email,"Bonjour from the heart, Mon Amour!",,,Text/Emails/bonjoure,sarah.b@promail.com,adrian.b@promail.com,27/02/1994
+Directory,paris_con,/documents,sinclair,,,,26/02/1994
+TextDocument,IMPORTANT_READ_THIS,/documents/paris_con,,Text/important,,,27/02/1994

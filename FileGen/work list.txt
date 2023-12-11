@@ -1,0 +1,35 @@
+xTutorial
+xReach Home Adrian
+	xAdd picture of adrian in france
+	xAdd email from adrian's wife wishing him well on his "business trip" to france
+	xFrance folder has a message giving the password for Sinclair's work computer, asking adrian to modify something on it
+Reach work Adrian
+	xFind employee list
+	--Find recording of sinclair, part of recording for experiment
+	xFind password for folder named france on home computer (email from sinclair to adrian mentioning that the folder password is the year they went to france)
+Reach work sinclair
+	--Find picture of sinclair in france
+	--Find picture of sinclair with the activist group
+	Find some document of sinclair researching a man named Victor Fring
+	Find an encrypted letter mentioning the connection credentials to her personal computer, the key word is Victor
+Reach home sinclair
+	Find more information about activist group
+	Find activist group manifesto, signed by Victor Fring
+	Find an email to victor giving him the credentials to the security computer
+	Find a mention of the password "erudition"
+Reach security computer
+	Find list of accessing staff, 
+	Find access to CEO computer
+Reach CEO computer
+	Find emails with A-Corp talking about experiments
+	Find encrypted documents detailing human experiments on Viridian
+	Find an email talking about the "lab accident"
+	Find police redacted police reports detailing the lab accident, and mentioning a possible death
+	Date of the accident is a date when only Adrian and Sinclair accessed the lab
+	There is an email from IT talking about a failed breach attempt, happened one day after the "accident"
+	Using the PAN address mentioned with the password "erudition" access Victor's computer
+Reach Victor
+	Find documents detailing Viridian's dangers, use in bio weapons, and prisoner testing
+	Find a detailed plan on how to use it to kill Adrian, and how killing Adrian may be the only way to stop the A-Corp deal, and thus funding to the research
+	Find final phone call
+xGame ending
