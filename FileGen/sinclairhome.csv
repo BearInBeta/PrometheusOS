@@ -1,0 +1,6 @@
+Type,Name,Path,Password,Resource,"Extra1 (sametext, from)","Extra2 (enc,to)",Extra3 (date)
+Directory,research_notes,,,,,,15/12/1990
+Directory,documents,/,,,,,15/05/1990
+Directory,pictures,.,,,,,15/05/1990
+Email,Paris Documents,,,Text/Emails/paris,sarah.b@promail.com,adrian.b@promail.com,02/03/1994
+ImageDocument,erudition,/pictures,,Sprites/activists,,,13/05/1994

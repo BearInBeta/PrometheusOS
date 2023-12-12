@@ -5,20 +5,20 @@ xReach Home Adrian
 	xFrance folder has a message giving the password for Sinclair's work computer, asking adrian to modify something on it
 Reach work Adrian
 	xFind employee list
+	xFind picture of sinclair in france
 	--Find recording of sinclair, part of recording for experiment
 	xFind password for folder named france on home computer (email from sinclair to adrian mentioning that the folder password is the year they went to france)
 Reach work sinclair
-	--Find picture of sinclair in france
-	--Find picture of sinclair with the activist group
-	Find some document of sinclair researching a man named Victor Fring
-	Find an encrypted letter mentioning the connection credentials to her personal computer, the key word is Victor
+	xFind some document of sinclair researching a man named Victor Fring
+	xFind an encrypted letter mentioning the connection credentials to her personal computer, the key word is Victor
 Reach home sinclair
+	xFind picture of sinclair with the activist group
 	Find more information about activist group
 	Find activist group manifesto, signed by Victor Fring
 	Find an email to victor giving him the credentials to the security computer
 	Find a mention of the password "erudition"
 Reach security computer
-	Find list of accessing staff, 
+	xFind list of accessing staff
 	Find access to CEO computer
 Reach CEO computer
 	Find emails with A-Corp talking about experiments
