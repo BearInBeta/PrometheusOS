@@ -8,7 +8,7 @@ public class Tutorial : MonoBehaviour
 {
     public Terminal terminal;
     public Image terminalButtonImage, profileimage;
-    public GameObject TerminalPanel, MainCamera;
+    public GameObject TerminalPanel, MainCamera, credits;
     public AudioSource vfxsource;
     public AudioClip notificationClip, successClip, failClip;
     public InputField commandField;
@@ -16,15 +16,25 @@ public class Tutorial : MonoBehaviour
     public Image imageviewer;
     public Button Profile, ImageViewer, DocViewer, AudioPlayer, Settings, Decrypt;
     public ImageDocument dekryptFile;
+
     // Start is called before the first frame update
     void Start()
     {
-        print(terminal.notutorial);
-        if(terminal.notutorial == false)
+        
+        if(!PlayerPrefs.HasKey("notutorial"))
         StartCoroutine(tutorialRing());
-        else
+        else if(!PlayerPrefs.HasKey("nodectutorial"))
         {
             commandField.interactable = true;  
+            Profile.interactable = true;
+            ImageViewer.interactable = true;
+            DocViewer.interactable = true;
+            AudioPlayer.interactable = true;
+            Settings.interactable = true;
+        }
+        else
+        {
+            commandField.interactable = true;
             Profile.interactable = true;
             ImageViewer.interactable = true;
             DocViewer.interactable = true;
@@ -49,6 +59,7 @@ public class Tutorial : MonoBehaviour
     }
     IEnumerator tutorialRing()
     {
+        PlayerPrefs.DeleteAll();
         commandField.interactable = false;
 
         while (!TerminalPanel.activeInHierarchy)
@@ -207,7 +218,7 @@ public class Tutorial : MonoBehaviour
             {
                 yield return StartCoroutine(tutorialSay("try 'email 1' to open the first email in the list"));
                 commandField.interactable = true; commandField.Select();
-                while (!docviewer.text.Contains("Sarah Johnson"))
+                while (!docviewer.text.Contains("Sarah Blackwood"))
                 {
                     yield return new WaitForSeconds(0.5f);
                 }
@@ -222,10 +233,10 @@ public class Tutorial : MonoBehaviour
                 }
             }
             yield return StartCoroutine(tutorialSay("looks like that woman you told me about"));
-            yield return StartCoroutine(tutorialSay("she wants you to access her fiance's computer"));
+            yield return StartCoroutine(tutorialSay("she wants you to access her husband's computer"));
             terminal.unlockCommand(1, true);
             yield return StartCoroutine(tutorialSay("now you can use the connect command to unlock it"));
-            yield return StartCoroutine(tutorialSay("just type 'connect' and the PAP address she sent"));
+            yield return StartCoroutine(tutorialSay("just type 'connect' and the PAN address she sent"));
             yield return StartCoroutine(tutorialSay("then it will ask you for the password"));
             yield return StartCoroutine(tutorialSay("if you did not copy it the email should still be open on the doc viewer on the right"));
             yield return StartCoroutine(tutorialSay("you can use ctrl + c to copy the text"));
@@ -269,7 +280,7 @@ public class Tutorial : MonoBehaviour
         else
         {
             commandField.interactable = true; commandField.Select();
-
+            PlayerPrefs.SetInt("nodectutorial", 1);
             yield return StartCoroutine(tutorialSay("alright, no problem"));
             yield return StartCoroutine(tutorialSay("i've unlocked all the commands"));
             yield return StartCoroutine(tutorialSay("good luck with your case ;)"));
@@ -285,12 +296,14 @@ public class Tutorial : MonoBehaviour
 
 
         }
+
+        PlayerPrefs.SetInt("notutorial", 1);
     }
 
 public IEnumerator tutorialSay(string say)
     {
         terminal.EnterResponse("alex is typing...");
-        float time = ((float)say.Length) / 10f;
+        float time = ((float)say.Length) / 15f;
         yield return new WaitForSeconds(time);
         terminal.removeText("\nalex is typing...");
         tutorialCharacter(say);
@@ -304,7 +317,7 @@ public IEnumerator tutorialSay(string say)
     public IEnumerator victorSay(string say)
     {
         terminal.EnterResponse("victor is typing...");
-        float time = ((float)say.Length) / 10f;
+        float time = ((float)say.Length) / 15f;
         yield return new WaitForSeconds(time);
         terminal.removeText("\nvictor is typing...");
         victorCharacter(say);
@@ -358,9 +371,10 @@ public IEnumerator tutorialSay(string say)
             yield return StartCoroutine(tutorialSay("I'll open it right now, it's also saved on your system"));
             yield return StartCoroutine(tutorialSay("good luck :)"));
             terminal.EnterResponse("user alex has logged off");
-            yield return new WaitForSeconds(1f);
+        commandField.interactable = true;
+        yield return new WaitForSeconds(1f);
             terminal.OpenImageDoc(new ImageDocument("dekrypt_tutorial", "", "Sprites/dekrypt_tutorial", ""));
-        
+        PlayerPrefs.SetInt("nodectutorial", 1);
 
 
     }
@@ -442,7 +456,7 @@ public IEnumerator tutorialSay(string say)
         yield return StartCoroutine(victorSay("i just hope it was the right choice"));
         yield return StartCoroutine(victorSay("goodbye, detective"));
         terminal.EnterResponse("user victor has logged off");
-
+        credits.SetActive(true);
 
     }
 

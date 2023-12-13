@@ -11,6 +11,7 @@ public class NotesUpdater : MonoBehaviour
     {
         string newNotes = GetComponent<InputField>().text;
         ph.notes = GetComponent<InputField>().text;
-        print("Notes updated to " + newNotes);
+        PlayerPrefs.SetString(ph.fsa.filesystem.ACName + "notes", ph.notes);
+        print("Notes updated to " + PlayerPrefs.GetString(ph.fsa.filesystem.ACName + "notes"));
     }
 }

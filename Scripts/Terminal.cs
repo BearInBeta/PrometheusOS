@@ -32,14 +32,10 @@ public class Terminal : MonoBehaviour
     public AudioClip successClip, failClip, notiClip;
     public SocialEngineeringTool SET;
     public bool finalWait = false;
-    public bool notutorial = false;
     public Tutorial tutorial;
     // Start is called before the first frame update
     void Start()
     {
-        PlayerPrefs.SetInt("VV203R", 0);
-        PlayerPrefs.SetInt("MA318F8", 0);
-
         GameObject[] FileSystemAccessGOs = GameObject.FindGameObjectsWithTag("Connectable");
         filesystems = new List<FileSystemAccess>();
         foreach(GameObject FileSystemAccessGO in FileSystemAccessGOs)
@@ -55,7 +51,7 @@ public class Terminal : MonoBehaviour
         }
         EnterResponse("Enter 'help' for list of commands");
         lockedcommands.Add(new Command("help", () => this.Help(), "(no input) Lists all available commands"));
-        lockedcommands.Add(new Command("connect", () => this.Connect(), "(requires input) Connects to the computer with the PAP number"));
+        lockedcommands.Add(new Command("connect", () => this.Connect(), "(requires input) Connects to the computer with the PAN number"));
         lockedcommands.Add(new Command("clear", () => this.ClearTerminal(), "(no input) Clears the terminal"));
         lockedcommands.Add(new Command("say", () => this.Say(), "(requires input) Repeats input"));
         lockedcommands.Add(new Command("list", () => this.List(), "(optional input) lists all system files in current document or path (if given)"));
@@ -67,13 +63,18 @@ public class Terminal : MonoBehaviour
         lockedcommands.Add(new Command("search", () => this.Search(), "(requires input) Searches for the requested query. Query must be enclosed with a quotation mark."));
         lockedcommands.Add(new Command("meta", () => this.Meta(), "(requires input) reads the metadata of the document in the specified path"));
 
-        if(notutorial) unlockAllCommands();
+        if(PlayerPrefs.HasKey("notutorial")) unlockAllCommands();
+        
 
     }
     public void unlockAllCommands()
     {
         foreach(Command comm in lockedcommands)
         {
+            if (!PlayerPrefs.HasKey("nodectutorial") && comm.command.Equals("dekrypt"))
+            {
+                continue;
+            }
             if (!commands.Contains(comm))
                 commands.Add(comm);
         }
@@ -225,6 +226,7 @@ public class Terminal : MonoBehaviour
             fileSystem = fsa.filesystem;
             EnterSuccessResponse("Connected to " + fsa.filesystem.ACName);
             SET.addFSA(fsa);
+            PlayerPrefs.SetInt(fsa.filesystem.ACName, 1);
         }
         else
         {
@@ -549,7 +551,7 @@ public class Terminal : MonoBehaviour
             EnterErrorResponse("<color=#8c002a>Document or directory not found</color>");
             return false;
         }
-        if (systemObject.password != "" && !waitingForInput)
+        if (systemObject.password != "" && !waitingForInput && !PlayerPrefs.HasKey(systemObject.filename))
         {
             nextFunction = action;
             waitingForInput = true;
@@ -563,6 +565,7 @@ public class Terminal : MonoBehaviour
             return false;
         }
 
+        PlayerPrefs.SetInt(systemObject.filename, 1);
         systemObject.password = "";
         return true;
     }

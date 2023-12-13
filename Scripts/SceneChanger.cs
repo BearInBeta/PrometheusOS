@@ -11,7 +11,7 @@ public class SceneChanger : MonoBehaviour
     private string FadeingToScene;           // The next scene to fade on key press
     public ToggleGroup options;           // Start scene options ( create accout, login, credits )
     private string toggleName;            // The name of selected toggle
-
+    public GameObject resetgame;
     // Hide mouse cursor in intro scene
     void Start() {
         sceneName = SceneManager.GetActiveScene().name;
@@ -29,8 +29,7 @@ public class SceneChanger : MonoBehaviour
         PlayerPrefs.DeleteAll();
 
         // Reload the current scene
-        Scene currentScene = SceneManager.GetActiveScene();
-        SceneManager.LoadScene(currentScene.buildIndex);
+        FadeToScene("MainGame");
     }
     // Fade to scene function
     public void FadeToScene(string sceneName)
@@ -68,7 +67,13 @@ public class SceneChanger : MonoBehaviour
         foreach (Toggle toggle in options.ActiveToggles())
         {
             toggleName = toggle.name.ToString();
-            FadeToScene(toggleName);
+            if (toggleName.Equals("NewGame")){
+                resetgame.SetActive(true);
+            }
+            else
+            {
+                FadeToScene(toggleName);
+            }
             /* // Go to the right scene :)
             if (toggleName == "CreateNewAccount")
             {

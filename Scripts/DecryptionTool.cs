@@ -32,7 +32,7 @@ public class DecryptionTool : MonoBehaviour
     private char[] scrambledAlpha;
 
     public List<LetterHolder> selectedHolders;
-
+    public ScrollRect scrollbar;
     public List<LetterHolder> letterHolders;
     public ToolsOpenClose toolsOpenClose;
     private TextDocument document;
@@ -255,10 +255,18 @@ public class DecryptionTool : MonoBehaviour
                 gameObject.transform.localScale = new Vector3(1f, 1f, 1f);
                 //gameObject.transform.localPosition = new Vector3(num, num2, 0f);
                 if (Letters[k] == ' ' || Letters[k] == '\n')
-            {
-                    gameObject.GetComponent<Image>().enabled = false;
+                {
+                      gameObject.GetComponent<Image>().enabled = false;
+                      gameObject.GetComponent<Button>().enabled = false;
                 }
-                if (Letters[k] == '@' || Letters[k] == ',' || Letters[k] == '.' || Letters[k] == '?' || Letters[k] == ':' || Letters[k] == '!' || Letters[k] == '/')
+
+            bool realletter = false;
+                foreach(char searchletter in alpha)
+                {
+                if (searchletter.Equals(Letters[k]))
+                    realletter = true;
+                }
+                if (!realletter)
                 {
                     gameObject.GetComponent<Button>().enabled = false;
                 }
@@ -280,6 +288,7 @@ public class DecryptionTool : MonoBehaviour
 
     public void selectLetter(char l)
     {
+        scrollbar.enabled = false;
         selectedHolders.Clear();
         foreach (LetterHolder current in letterHolders)
         {
@@ -295,7 +304,13 @@ public class DecryptionTool : MonoBehaviour
         }
 
     }
+    public void deselectLetter()
+    {
+        scrollbar.enabled = true;
+        selectedHolders.Clear();
+      
 
+    }
     public void highlight(LetterHolder l)
     {
         int firstletter = 0;

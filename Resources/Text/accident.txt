@@ -1,5 +1,5 @@
-Lab accident report:
+Lab accident report
 
 It seems there was a leak in the Viridian sample. Normally this would not cause an issue as it does not affect humans. However, it seems that this sample may have been modified using the DNA of Dr Blackwood which caused his immediate death.
-Dr Blackwood’s continuous work with the virus may have caused it to accidentally imprint on his DNA.
-Currently the evidence points to it being an accident, with no foul play. Further investigation needs to be conducted.
+
+Note: it seems a breach attempt from VV203R happened around the time of the accident, investigation required

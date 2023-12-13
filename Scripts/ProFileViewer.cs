@@ -29,7 +29,12 @@ public class ProFileViewer : MonoBehaviour
         email.text = ph.email.text;
         cd.fsa = ph.fsa;
         notes.gameObject.GetComponent<NotesUpdater>().ph = ph;
+        if (ph.notes.Equals("") && PlayerPrefs.HasKey(ph.fsa.filesystem.ACName + "notes"))
+        {
+            ph.notes = PlayerPrefs.GetString(ph.fsa.filesystem.ACName + "notes");
+        }
         notes.text = ph.notes;
+
         proFileGO.SetActive(true);
     }
 }
