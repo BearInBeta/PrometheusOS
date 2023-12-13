@@ -1,0 +1,8 @@
+Type,Name,Path,Password,Resource,"Extra1 (sametext, from)","Extra2 (enc,to)",Extra3 (date)
+Directory,documents,/,iluvalex,,,,05/05/1993
+Directory,pictures,.,,,,,05/05/1993
+Email,Re: Funding for Viridian Research,,,Text/Emails/funding,nathan.bennet@jlabs.com,orson.k@a-corp.org,10/07/1994
+Email,Re: Breach attempt traced,,,Text/Emails/breach,nathan.bennet@jlabs.com,IT@jlabs.com,17/07/1994
+TextDocument,accident_report,documents,,Text/accident,,TRUE,16/07/1994
+TextDocument,acorp_experiments,documents,,Text/acorp_experiments,,TRUE,12/07/1994
+TextDocument,im_logs,documents,,Text/imlog,,TRUE,16/07/1994

@@ -2,7 +2,7 @@ Type,Name,Path,Password,Resource,"Extra1 (sametext, from)","Extra2 (enc,to)",Ext
 Directory,documents,/,iluvalex,,,,07/08/1994
 Directory,pictures,.,,,,,07/08/1994
 Directory,music,,,,,,07/08/1994
-Email,Re: Urgent: Dr. Blackwood's Disappearance,,,Text/Emails/sarah_johnson,sarah.johnson@promail.com,detective@promail.com,08/08/1994
+Email,Re: Urgent: Dr. Blackwood's Disappearance,,,Text/Emails/sarah_johnson,sarah.b@promail.com,detective@promail.com,08/08/1994
 ImageDocument,coffee,/pictures,,Sprites/detective,,,07/08/1994
 TextDocument,pina colada,documents,,Text/pinacolada,,,07/08/1994
 ImageDocument,dekrypt_tutorial,.,,Sprites/dekrypt_tutorial,,,07/08/1994

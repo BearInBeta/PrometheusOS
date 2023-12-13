@@ -13,21 +13,20 @@ Reach work sinclair
 	xFind an encrypted letter mentioning the connection credentials to her personal computer, the key word is Victor
 Reach home sinclair
 	xFind picture of sinclair with the activist group
-	Find more information about activist group
-	Find activist group manifesto, signed by Victor Fring
-	Find an email to victor giving him the credentials to the security computer
-	Find a mention of the password "erudition"
+	xFind more information about activist group
+	xFind activist group manifesto, signed by Victor Fring
+	xFind an email to victor giving him the credentials to the security computer
+	xFind a mention of the password "erudition"
 Reach security computer
 	xFind list of accessing staff
-	Find access to CEO computer
+	xFind access to CEO computer
 Reach CEO computer
-	Find emails with A-Corp talking about experiments
+	xFind emails with A-Corp talking about experiments
 	Find encrypted documents detailing human experiments on Viridian
-	Find an email talking about the "lab accident"
+	xFind an email talking about the "lab accident"
 	Find police redacted police reports detailing the lab accident, and mentioning a possible death
-	Date of the accident is a date when only Adrian and Sinclair accessed the lab
-	There is an email from IT talking about a failed breach attempt, happened one day after the "accident"
-	Using the PAN address mentioned with the password "erudition" access Victor's computer
+	xThere is an email from IT talking about a failed breach attempt, happened one day after the "accident"
+	xUsing the PAN address mentioned with the password "erudition" access Victor's computer
 Reach Victor
 	Find documents detailing Viridian's dangers, use in bio weapons, and prisoner testing
 	Find a detailed plan on how to use it to kill Adrian, and how killing Adrian may be the only way to stop the A-Corp deal, and thus funding to the research

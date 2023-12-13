@@ -1,0 +1,13 @@
+Leave it be for now, we'll deal with it later.
+---------------
+From: IT@jlabs.com
+To: Nathan.bennet@jlabs.com
+Subject: Breach attempt traced
+
+Hell Dr. Bennet
+
+It seems the breach attempt I found yesterday can be traced to VV203R, however I was not able to access it. Should I forward it to the police?
+
+Regrads,
+
+William Harrison
