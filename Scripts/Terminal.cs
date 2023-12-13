@@ -32,7 +32,7 @@ public class Terminal : MonoBehaviour
     public AudioClip successClip, failClip, notiClip;
     public SocialEngineeringTool SET;
     public bool finalWait = false;
-    public bool notutorial = true;
+    public bool notutorial = false;
     public Tutorial tutorial;
     // Start is called before the first frame update
     void Start()
@@ -465,6 +465,9 @@ public class Terminal : MonoBehaviour
         {
             PlayerPrefs.SetInt("dekryptTutorialDone", 0);
             StartCoroutine(tutorial.dekryptTutorial());
+        }
+        if (textFile.filename.Equals("read_this_detective")){
+            StartCoroutine(tutorial.finalRing());
         }
         EnterSuccessResponse("Document opened in Doc Viewer");
     }

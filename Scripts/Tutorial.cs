@@ -19,7 +19,8 @@ public class Tutorial : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if(!terminal.notutorial)
+        print(terminal.notutorial);
+        if(terminal.notutorial == false)
         StartCoroutine(tutorialRing());
         else
         {
@@ -363,7 +364,7 @@ public IEnumerator tutorialSay(string say)
 
 
     }
-    IEnumerator finalRing()
+    public IEnumerator finalRing()
     {
         MainCamera.GetComponent<CameraFilterPack_FX_Glitch3>().enabled = true;
         for(int i = 0; i < 10; i++)
@@ -394,7 +395,6 @@ public IEnumerator tutorialSay(string say)
         }
 
         yield return StartCoroutine(victorSay("hello detective"));
-        yield return StartCoroutine(victorSay("it seems there is no escaping you"));
         yield return StartCoroutine(victorSay("i assume you understand why this had to be done"));
         yield return StartCoroutine(victorSay("or why i think that"));
         yield return StartCoroutine(victorSay("maybe you disagree"));
@@ -404,13 +404,12 @@ public IEnumerator tutorialSay(string say)
         yield return StartCoroutine(victorSay("do you understand the power one company could have with a weapon based on Viridian?"));
         yield return StartCoroutine(victorSay("have you seen the documents that show they were testing it on humans?"));
         yield return StartCoroutine(victorSay("do you understand how one genocidal monster can use it to wipe a whole culture off the face of the earth?"));
-        yield return StartCoroutine(victorSay("so I'll admit it"));
         yield return StartCoroutine(victorSay("it was me, I did it"));
         yield return StartCoroutine(victorSay("sinclair wasn't able to so I went there and killed adrian myself"));
         yield return StartCoroutine(victorSay("with his own research nonetheless"));
-        yield return StartCoroutine(victorSay("knowing full well that the ScienceWorks and A-Corp would not investigate"));
-        yield return StartCoroutine(victorSay("launching an investigation with a \"lab accident\" like this would mean their end"));
-        yield return StartCoroutine(victorSay("so they covered it up"));
+        yield return StartCoroutine(victorSay("I thought that A-Corp would back off this research if there was a death in the lab"));
+        yield return StartCoroutine(victorSay("however I didn't expect Nathan to go this far"));
+        yield return StartCoroutine(victorSay("and cover up adrian's death"));
         yield return StartCoroutine(victorSay("but you uncovered it"));
         yield return StartCoroutine(victorSay("and now it's all in your hand"));
         yield return StartCoroutine(victorSay("to be honest, I don't see myself in a position to determine the future of this research"));
@@ -418,14 +417,12 @@ public IEnumerator tutorialSay(string say)
         yield return StartCoroutine(victorSay("so I will leave it to you"));
         yield return StartCoroutine(victorSay("the way I see it you have four options"));
         yield return StartCoroutine(victorSay("the first option is to send your findings to the police"));
-        yield return StartCoroutine(victorSay("I will be arrested, sinclair too, Blackwood's fiance will know the whole truth"));
-        yield return StartCoroutine(victorSay("but I am certain all the data about Viridian and A-Corp will be covered up"));
+        yield return StartCoroutine(victorSay("do you trust them to do the right thing? or are they in the pockets of JLabs and A-Corp?"));
         yield return StartCoroutine(victorSay("option 2 will be to send your finding to a journalist"));
         yield return StartCoroutine(victorSay("I know one mr. frank cunningham who works at the national"));
         yield return StartCoroutine(victorSay("he will gladly take your story and expose A-Corp"));
         yield return StartCoroutine(victorSay("the third option is contacting A-Corp directly"));
-        yield return StartCoroutine(victorSay("all of this will be covered up, and nothing will come of it"));
-        yield return StartCoroutine(victorSay("except my untimely death, probably"));
+        yield return StartCoroutine(victorSay("maybe you believe they will do the right thing"));
         yield return StartCoroutine(victorSay("finally, you can leave it all be"));
         yield return StartCoroutine(victorSay("nothing will change, no one will know the truth"));
         yield return StartCoroutine(victorSay("and Viridian research will continue"));
