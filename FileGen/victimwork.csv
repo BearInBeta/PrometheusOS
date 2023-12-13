@@ -1,6 +1,6 @@
 Type,Name,Path,Password,Resource,"Extra1 (sametext, from)","Extra2 (enc,to)",Extra3 (date)
 Directory,research_notes,,,,,,15/01/1993
-Directory,viridian,/research_notes,sinclair,,,,06/01/1994
+Directory,viridian,/research_notes,sinclair,,,,18/04/1994
 Directory,xf303,/research_notes,kdflksdf,,,,19/04/1993
 Directory,xf301,/research_notes,ldksf;;ldfs,,,,13/11/1992
 Directory,quada,/research_notes,afjhahkdfa,,,,03/11/1993
@@ -11,3 +11,4 @@ AudioDocument,viridian_notes,/research_notes/viridian,,Audio/recordings/exp/rec1
 Email,RE:Paris Documents,,,Text/Emails/paris,adrian.blackwood@jlabs.com,barbara.sinclair@jlabs.com,02/03/1994
 ImageDocument,contact_list,/pictures,,Sprites/list,,,13/05/1994
 ImageDocument,sinclair,/pictures,,Sprites/barbinparis,,,13/05/1994
+TextDocument,lab_notes,/research_notes,,Text/viridian_notes,,,18/04/1994
